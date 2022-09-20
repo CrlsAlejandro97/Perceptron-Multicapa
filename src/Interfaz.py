@@ -12,10 +12,10 @@ class Interfaz:
         root = tk.Tk() 
         root.geometry(self.geometry)
         frame=Frame(root, width=self.width,height=self.height)
-        #frame.pack(padx=10,pady=10)
+
         frame.place(relx=0,rely=0)
-        #Generamos la letra b apartir del csv
-        #patron = readcsv('data/letra_f.csv')
+
+        # Transformo el arreglo de una letra a una matriz de 10x10
         letra_2d = np.reshape(letra, (10,10))
         list_btn = []
         for i in range(10):
