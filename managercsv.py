@@ -1,5 +1,6 @@
 from csv import reader
 from random import random,randint
+import pandas as pd
 
 def readcsv(file):
     aux=[]
@@ -24,10 +25,20 @@ def readcsv(file):
 
 def blur(pattern,percetange):
     """Posiciones que se van difuminar segun el porcentaje: percentange"""
-    position = sorted([randint(0,99) for i in range(int(percetange))])
-    print(len(pattern))
-    for i in range(int(10)):
-        for j in range (int(10)):
+    position = sorted([randint(1,100) for i in range(int(percetange))])
+    pattern=pd.DataFrame(pattern)
+    print(pattern[0])
+    """for i in range(1,10):
+        for j in range (1,10):
+            for z in position:
+             if(k+j)==z:
+                 if (pattern[i][j]=='0'):
+                     pattern[i][j]=chr(1)
+                 else:
+                     pattern[i][j]=chr(0)"""
+
+
+            
             
 
         
