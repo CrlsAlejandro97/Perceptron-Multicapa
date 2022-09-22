@@ -16,7 +16,7 @@ for i in range(int(10)):
     for j in range(int(10)):
         list_btn[i].append(Button(frame))
         list_btn[i][j].pack()
-        if (patron[i][j] =='1' ):
+        if (patron[i][j] =='1'):
          list_btn[i][j].config(bg="blue", borderwidth ="1", activebackground="orange", relief="solid")
 
         list_btn[i][j].place(relx = 0.08 + 0.08*j, rely = 0.09 + 0.09*i, relwidth= 0.08, relheight=0.09)
