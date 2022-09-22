@@ -15,7 +15,6 @@ def leer_letras(path):
     return letras
 
 
-
 def mostrar_letras(letras, distorsiones):
     interfaz = Interfaz("900x700", 600, 600)
     for i in range(10, 90):
@@ -31,20 +30,20 @@ def main():
     for cant in cantidades:
         for letra in letras:
             #Leo la entrada
-            data = leer_letras(f"src/data/originales/{cant}/letras_{letra}.csv")
+            data = leer_letras(f"data/originales/{cant}/letras_{letra}.csv")
             #Manipulo el dato
             distorsionador.distorsionar(data)
             dataframe_dist_data = pd.DataFrame(data)
     
-            dataframe_dist_data.to_csv(f"src/data/distorsionadas/{cant}/letras_{letra}_dist.csv", sep=";", index=None, header=None)
+            dataframe_dist_data.to_csv(f"data/distorsionadas/{cant}/letras_{letra}.csv", sep=";", index=None, header=None)
 
 
-
-
-min_distorsion = 0.01
+""" min_distorsion = 0.01
 max_distorsion = 0.3
-distorsionador = Distorsionador(min_distorsion, max_distorsion)
-letras_b_100 = leer_letras("data/originales/100/letras_b.csv")
+distorsionador = Distorsionador(min_distorsion, max_distorsion) """
+
+main()
+#letras_b_100 = leer_letras("data/originales/100/letras_b.csv")
 """ letras_d_100 = leer_letras("data/originales/100/letras_d.csv")
 letras_f_100 = leer_letras("data/originales/100/letras_f.csv")
 
@@ -57,7 +56,7 @@ letras_d_1000 = leer_letras("data/originales/1000/letras_d.csv")
 letras_f_1000 = leer_letras("data/originales/1000/letras_f.csv") """
 
 
-dist_letras_b_100 = distorsionador.distorsionar(letras_b_100)
+#dist_letras_b_100 = distorsionador.distorsionar(letras_b_100)
 """ dist_letras_d_100 = distorsionador.distorsionar(letras_d_100)
 dist_letras_f_100 = distorsionador.distorsionar(letras_f_100)
 
@@ -69,7 +68,7 @@ dist_letras_b_1000 = distorsionador.distorsionar(letras_b_1000)
 dist_letras_d_1000 = distorsionador.distorsionar(letras_d_1000)
 dist_letras_f_1000 = distorsionador.distorsionar(letras_f_1000)  """
 
-mostrar_letras(letras_b_100, dist_letras_b_100)
+#mostrar_letras(letras_b_100, dist_letras_b_100)
 #Guardo las letras distorsionadas en otro dataset llamado letras_b_dist
 
 
