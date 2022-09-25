@@ -1,5 +1,6 @@
 from csv import reader
 from random import random,randint
+import os
 
 def readcsv(file):
     aux=[]
@@ -29,3 +30,9 @@ def blur(pattern,percetange):
     for i in range(int(10)):
         for j in range (int(10)):
             pass
+
+
+def file_exists (filename, path=os.getcwd):
+    #Verifica si el directorio actual existe
+    files = os.listdir(path)
+    return filename in files
