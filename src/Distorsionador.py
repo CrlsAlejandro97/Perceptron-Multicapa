@@ -48,17 +48,6 @@ class Distorsionador:
             celdas_mover-=1
         return letra
 
-        """ for i in range(len(letra)):
-            if letra[i] == 1:
-                if random.random() < celdas_mover:
-                    num = letra[i]
-                    posicion_reemplazo = random.randint(0, 99)
-                    while letra[posicion_reemplazo] == 1:
-                        posicion_reemplazo = random.randint(0, 99)
-                    letra[i] = letra[posicion_reemplazo]
-                    letra[posicion_reemplazo] = num
-        return letra """
-    
     def _calc_unos(self, letra):
         cant_unos = 0
         for i in letra:

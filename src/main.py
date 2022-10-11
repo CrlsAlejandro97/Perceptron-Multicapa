@@ -20,27 +20,36 @@ def mostrar_letras(letras, distorsiones):
     for i in range(10, 90):
         interfaz.mostrar(letras[i], distorsiones[i]) 
 
+def generar_data_originales(cant):
+    letra_b = leer_letras("data/letra_b.csv")
+    letra_d = leer_letras("data/letra_d.csv")
+    letra_f = leer_letras("data/letra_f.csv")
+    letras = {
+        'b': letra_b,
+        'd': letra_d,
+        'f': letra_f
+    }
+    cantidades = ["100", "500", "1000"]
+    for cant in cantidades:
+        pass
 
 def main():
     min_distorsion = 0.01
     max_distorsion = 0.3
     distorsionador = Distorsionador(min_distorsion, max_distorsion)
-    cantidades = ["100", "500", "1000"]
-    letras = ["b", "d", "f"]
-    for cant in cantidades:
-        for letra in letras:
-            #Leo la entrada
-            data = leer_letras(f"data/originales/{cant}/letras_{letra}.csv")
-            #Manipulo el dato
-            distorsionador.distorsionar(data)
-            dataframe_dist_data = pd.DataFrame(data)
     
-            dataframe_dist_data.to_csv(f"data/distorsionadas/{cant}/letras_{letra}.csv", sep=";", index=None, header=None)
+    cantidades = ["100", "500", "1000"]
+    for cant in cantidades:
+        #Leo la entrada
+        data = leer_letras(f"data/originales/{cant}/letras.csv")
+        #Manipulo el dato
+        distorsionador.distorsionar(data)
+        dataframe_dist_data = pd.DataFrame(data)
+
+        dataframe_dist_data.to_csv(f"data/distorsionadas/{cant}/letras.csv", sep=";", index=None, header=None)
 
 
-""" min_distorsion = 0.01
-max_distorsion = 0.3
-distorsionador = Distorsionador(min_distorsion, max_distorsion) """
+
 
 main()
 #letras_b_100 = leer_letras("data/originales/100/letras_b.csv")
