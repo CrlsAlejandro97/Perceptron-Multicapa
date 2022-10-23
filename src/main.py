@@ -7,7 +7,7 @@ import math
 
 def leer_letras(path):
     #Leo el dataset de letras
-    letras = pd.read_csv(path, sep=";", header=None)
+    letras = pd.read_csv(path, sep=",", header=None)
 
     #Lo convierto de dataFrame a un arreglo de numpy para manipularlo mejor
     letras = letras.to_numpy()
@@ -46,38 +46,11 @@ def main():
         distorsionador.distorsionar(data)
         dataframe_dist_data = pd.DataFrame(data)
 
-        dataframe_dist_data.to_csv(f"data/distorsionadas/{cant}/letras.csv", sep=";", index=None, header=None)
+        dataframe_dist_data.to_csv(f"data/distorsionadas/{cant}/letras.csv", sep=",", index=None, header=None)
 
 
 
 
 main()
-#letras_b_100 = leer_letras("data/originales/100/letras_b.csv")
-""" letras_d_100 = leer_letras("data/originales/100/letras_d.csv")
-letras_f_100 = leer_letras("data/originales/100/letras_f.csv")
-
-letras_b_500 = leer_letras("data/originales/500/letras_b.csv")
-letras_d_500 = leer_letras("data/originales/500/letras_d.csv")
-letras_f_500 = leer_letras("data/originales/500/letras_f.csv")
- 
-letras_b_1000 = leer_letras("data/originales/1000/letras_b.csv")
-letras_d_1000 = leer_letras("data/originales/1000/letras_d.csv")
-letras_f_1000 = leer_letras("data/originales/1000/letras_f.csv") """
-
-
-#dist_letras_b_100 = distorsionador.distorsionar(letras_b_100)
-""" dist_letras_d_100 = distorsionador.distorsionar(letras_d_100)
-dist_letras_f_100 = distorsionador.distorsionar(letras_f_100)
-
-dist_letras_b_500 = distorsionador.distorsionar(letras_b_500)
-dist_letras_d_500 = distorsionador.distorsionar(letras_d_500)
-dist_letras_f_500 = distorsionador.distorsionar(letras_f_500)
-
-dist_letras_b_1000 = distorsionador.distorsionar(letras_b_1000)
-dist_letras_d_1000 = distorsionador.distorsionar(letras_d_1000)
-dist_letras_f_1000 = distorsionador.distorsionar(letras_f_1000)  """
-
-#mostrar_letras(letras_b_100, dist_letras_b_100)
-#Guardo las letras distorsionadas en otro dataset llamado letras_b_dist
 
 
