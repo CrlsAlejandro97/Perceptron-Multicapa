@@ -19,9 +19,10 @@ class Distorsionador:
         for i in range(len(letras)):
             #Arranco a distorsionar el dataset desde la posicion igual al 10% de la cantidad de letras que hay en el ds
             if i > int(cant_sin_dist):
+                
                 letra = letras[i]
                 distorsion = self._calcDistorsion()
-
+                
                 letras[i] = self._dist_letra(letra, distorsion)
             else:
                 distorsion = 0
@@ -36,7 +37,8 @@ class Distorsionador:
         # Recorro el arreglo de la letra y si hay un uno hay una probabilidad de un x porciento de que se cambie de lugar dependiendo de la distorsion calculada
         posiciones_uno = []
         posiciones_cero = []
-        for i in range(len(letra)):
+        #Le resto 3 ya que solamente selecciono hasta la posicion 100, a partir de la 100 se encuentran datos asociados a que tipo de clase pertenece y no se lo debe distorsionar
+        for i in range(len(letra)-3):
             if letra[i] == 1:
                 posiciones_uno.append(i)
             else:

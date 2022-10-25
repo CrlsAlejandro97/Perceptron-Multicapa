@@ -20,16 +20,21 @@ def generar_data_originales(letras):
     cantidades = [100, 500, 1000]
     for cant in cantidades:
         tipo_letra = "b"
+        c_letras = {
+            'b': np.array([1, 0, 0]),
+            'd': np.array([0, 1, 0]),
+            'f': np.array([0, 0, 1])
+        }
         letras_format_csv = []
         for i in range(cant):
             if tipo_letra == "b":
-                letras_format_csv.append(letras["b"])
+                letras_format_csv.append(np.concatenate((letras["b"], c_letras["b"])))
                 tipo_letra = "d"
             elif tipo_letra == "d":
-                letras_format_csv.append(letras["d"])
+                letras_format_csv.append(np.concatenate((letras["d"], c_letras["d"])))
                 tipo_letra = "f"
             else:
-                letras_format_csv.append(letras["f"])
+                letras_format_csv.append(np.concatenate((letras["f"], c_letras["f"])))
                 tipo_letra = "b"
 
         file = open(f'data/originales/{str(cant)}/letras.csv', 'w+', newline ='')
@@ -81,6 +86,15 @@ letras = {
     'f': letra_f
 }
 
+""" letras["b"] = np.reshape(letras["b"], (1, 100))[0]
 
+w = np.array([1, 0, 0])
+con = np.concatenate((letras['b'], w))
+print(letras['b'])
+print(w)
+print(con)
+
+print(type(letras['b']))
+print(type(w)) """
 
 generar_data_originales(letras)

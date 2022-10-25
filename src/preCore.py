@@ -5,31 +5,32 @@ import matplotlib.pyplot as plt
 from function import lineal, sigmoide
 import os 
 
-
-#Capa de entrada
-
-ce = []
-
-#Capa de salida
-
-cs = []
-
-#Primera capa oculta
-
-c1 = []
-
-#Segunda capa oculta
-
-c2 = []
-
-#Inicializamos los pesos (100 por cada neurona, tenemos 5 neuronas)
-
 #Cantidades de neuronas por cada capa
 
 cant_ce = 100
 cant_cs = 3
 cant_c1 = 5
 cant_c2 = 5
+
+#Capa de entrada, se los inicializa en 0
+
+ce = np.zeros(cant_ce, dtype=int)
+
+#Capa de salida
+
+cs = np.zeros(cant_cs, dtype=int)
+
+#Primera capa oculta
+
+c1 = np.zeros(cant_c1, dtype=int)
+
+#Segunda capa oculta
+
+c2 = np.zeros(cant_c2, dtype=int)
+
+#Inicializamos los pesos (100 por cada neurona, tenemos 5 neuronas)
+
+
 
 #Cantidades de pesos
 
@@ -86,4 +87,19 @@ B = random.random()
 
 letras_100 = pd.read_csv(os.path.join(os.path.abspath(''),"data","distorsiondas",'100','letras.csv'),sep=';',header=None).to_numpy()
 letras_500 = pd.read_csv(os.path.join(os.path.abspath(''),"data","originales",'100','letras_d.csv'),sep=';',header=None).to_numpy()
-letras_1000 = (pd.read_csv(os.path.join(os.path.abspath(''),"data","originales",'100','letras_f.csv'),sep=';',header=None)).to_numpy()[0]
+letras_1000 = pd.read_csv(os.path.join(os.path.abspath(''),"data","originales",'100','letras_f.csv'),sep=';',header=None).to_numpy()
+
+
+#Dividir los datos de entrada en validacion, entrenamiento y test, en este caso primero para letras_100
+
+data_train_porc = 0.8
+data_test_porc = 0.15
+data_validation_porc = 0.05
+
+cant_data_train = int(len(letras_100)*data_train_porc)
+cant_data_test = int(len(letras_100)*data_test_porc)
+cant_data_validation = 0
+
+data_train = letras_100[:cant_data_train]
+data_test = letras_100[cant_data_train+1:cant_data_train+cant_data_test]
+data_validation = letras_100[cant_data_train+cant_data_test+1:len()]

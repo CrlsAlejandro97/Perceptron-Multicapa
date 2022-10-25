@@ -21,7 +21,6 @@ def dataset_distorsion(dataset, cant):
     max_distorsion = 0.3
     distorsionador = Distorsionador(min_distorsion, max_distorsion)
     
-
     distorsiones = distorsionador.distorsionar(dataset)
     dataframe_dist_data = pd.DataFrame(dataset)
 
