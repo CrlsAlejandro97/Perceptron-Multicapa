@@ -85,14 +85,29 @@ B = random.random()
 
 #Leer letras distorsionadas
 
-letras_100 = pd.read_csv(os.path.join(os.path.abspath(''),"data","distorsiondas",'100','letras.csv'),sep=';',header=None).to_numpy()
-letras_500 = pd.read_csv(os.path.join(os.path.abspath(''),"data","originales",'100','letras_d.csv'),sep=';',header=None).to_numpy()
-letras_1000 = pd.read_csv(os.path.join(os.path.abspath(''),"data","originales",'100','letras_f.csv'),sep=';',header=None).to_numpy()
+letras_100 = pd.read_csv("data/distorsionadas/100/letras.csv",sep=';',header=None).to_numpy()
+#letras_500 = pd.read_csv(os.path.join("data","distorsiondas",'100','letras.csv'),sep=';',header=None).to_numpy()
+#letras_1000 = pd.read_csv(os.path.join("data","distorsiondas",'100','letras.csv'),sep=';',header=None).to_numpy()
+
+
+#Dividir el codigo de la letra de la clase
+cod_clase = []
+for letra in letras_100:
+    codigo = letra[:100]
+    clase = letra[100:]
+    cod_clase.append((codigo, clase))
+    if (clase==y['b']).all():
+        print("Letra b")
+    if (clase==y['d']).all():
+        print("Letra d")
+    if (clase==y['f']).all():
+        print("Letra f")
+
 
 
 #Dividir los datos de entrada en validacion, entrenamiento y test, en este caso primero para letras_100
 
-data_train_porc = 0.8
+""" data_train_porc = 0.8
 data_test_porc = 0.15
 data_validation_porc = 0.05
 
@@ -102,4 +117,4 @@ cant_data_validation = 0
 
 data_train = letras_100[:cant_data_train]
 data_test = letras_100[cant_data_train+1:cant_data_train+cant_data_test]
-data_validation = letras_100[cant_data_train+cant_data_test+1:len()]
+data_validation = letras_100[cant_data_train+cant_data_test+1:len()] """

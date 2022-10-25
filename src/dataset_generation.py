@@ -1,3 +1,4 @@
+from random import shuffle
 import numpy as np
 import csv
 
@@ -37,6 +38,9 @@ def generar_data_originales(letras):
                 letras_format_csv.append(np.concatenate((letras["f"], c_letras["f"])))
                 tipo_letra = "b"
 
+        #Mezclo el dataset para mas aleatoriedad
+        shuffle(letras_format_csv)
+        
         file = open(f'data/originales/{str(cant)}/letras.csv', 'w+', newline ='')
         with file:   
             write = csv.writer(file, delimiter=';')
