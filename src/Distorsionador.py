@@ -13,47 +13,51 @@ class Distorsionador:
         return distorsion
     
     def distorsionar(self, letras):
-        distorsiones = []
-
         # El 10% de las letras tienen que mantenerse originales
         cant_sin_dist = int(0.1 * len(letras))
+        distorsiones = []
         for i in range(len(letras)):
+            #Arranco a distorsionar el dataset desde la posicion igual al 10% de la cantidad de letras que hay en el ds
             if i > int(cant_sin_dist):
+                
                 letra = letras[i]
                 distorsion = self._calcDistorsion()
-                celdas_uno = self._calc_unos(letra)
-                celdas_mover = math.ceil(distorsion*celdas_uno)
-                letras[i] = self._dist_letra(letra, celdas_mover)
+                
+                letras[i] = self._dist_letra(letra, distorsion)
             else:
                 distorsion = 0
+            
             distorsiones.append(distorsion)
+
+
         return distorsiones
 
-    def _dist_letra(self, letra, celdas_mover):
+    def _dist_letra(self, letra, distorsion):
 
         # Recorro el arreglo de la letra y si hay un uno hay una probabilidad de un x porciento de que se cambie de lugar dependiendo de la distorsion calculada
-        posiciones_reemplazadas = []
+        posiciones_uno = []
+        posiciones_cero = []
+        #Le resto 3 ya que solamente selecciono hasta la posicion 100, a partir de la 100 se encuentran datos asociados a que tipo de clase pertenece y no se lo debe distorsionar
+        for i in range(len(letra)-3):
+            if letra[i] == 1:
+                posiciones_uno.append(i)
+            else:
+                posiciones_cero.append(i)
+
+        celdas_mover = math.ceil(distorsion*len(posiciones_uno))
+
         while celdas_mover > 0:
-            posicion = random.randint(0, 99)
-            while letra[posicion] != 1 or (posicion in posiciones_reemplazadas):
-                posicion = random.randint(0, 99)
-            posicion_reemplazo = random.randint(0, 99)
-            while letra[posicion_reemplazo] != 0 or (posicion_reemplazo in posiciones_reemplazadas):
-                posicion_reemplazo = random.randint(0, 99)
-            posiciones_reemplazadas.append(posicion_reemplazo)
-            posiciones_reemplazadas.append(posicion)
-            letra_reemplazo = letra[posicion_reemplazo]
-            letra[posicion_reemplazo] = letra[posicion]
-            letra[posicion] = letra_reemplazo
+            posicion_uno = random.choice(posiciones_uno)
+            posicion_cero = random.choice(posiciones_cero)
+            letra[posicion_cero] = 1
+            letra[posicion_uno] = 0
+            posiciones_cero.remove(posicion_cero)
+            posiciones_uno.remove(posicion_uno)
             celdas_mover-=1
+            
         return letra
 
-    def _calc_unos(self, letra):
-        cant_unos = 0
-        for i in letra:
-            if i == 1:
-                cant_unos += 1
-        return cant_unos
+    
     
 
 
