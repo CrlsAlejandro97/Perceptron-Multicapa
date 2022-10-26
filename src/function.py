@@ -11,4 +11,4 @@ def adjustment_weight(w,x,alfa,err):
  #x: vector de entrada
  #alfa: factor de aprendizaje
  #err: error de prediccion
- return w+0.5*x*alfa*err
+ return w+(0.5*x*alfa*err)
