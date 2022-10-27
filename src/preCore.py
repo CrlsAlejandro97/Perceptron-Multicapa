@@ -42,7 +42,7 @@ data_test = []
 for letra in letras_test:
     x_test = letra[:100]
     y_test = letra[100:]
-    data_train.append((x_test, y_test))
+    data_test.append((x_test, y_test))
 
 data_validation = []
 for letra in letras_validation:
@@ -154,32 +154,83 @@ w33 = w[10:15]
 W3 = [w31,w32,w33]
 
 #Bias
-B = random.random()
+b1 = random.random()
+b2 = random.random()
+b3 = random.random()
 
-
-
-for letra in data_train[:1]:
+""" for letra in data_train[:1]:
     x = letra[0]
     y = letra[1]
     ce = x[:]
+    entradas_primer_capa = []
+    salidas_primer_capa = []
     for i,n in enumerate(c1.keys()):
-        entrada = np.dot(W1[i],x) + B
+        entrada = np.dot(W1[i],x) + b1
         c1[n]['x'] = entrada
         c1[n]['y'] = lineal(entrada)
+        entradas_primer_capa.append(c1[n]["x"])
+        salidas_primer_capa.append(c1[n]["y"])
     
+    entradas_segunda_capa = []
+    salidas_segunda_capa = []
     for i,n in enumerate(c2.keys()):
-        c2[n]['x'] = np.dot(W2[i],c1[i]['y']) + B
-        c2[n]['y'] = sigmoide(c2[n]['x'])
-    
+        c2[n]['x'] = np.dot(W2[i],salidas_primer_capa) + b2
+        c2[n]['y'] = lineal(c2[n]['x'])
+        entradas_segunda_capa.append(c2[n]['x'])
+        salidas_segunda_capa.append(c2[n]['y'])
+
+    entradas_salida_capa = []
+    salidas_salida_capa = []
     salida = np.empty(3, dtype=float)
     for i,n in enumerate(cs.keys()):
-        cs[n]['x'] = np.dot(W3[i],c2[i]['y']) + B
+        cs[n]['x'] = np.dot(W3[i],salidas_segunda_capa) + b3
         cs[n]['y'] = sigmoide(cs[n]['x'])
+        entradas_salida_capa.append(cs[n]['x'])
+        salidas_salida_capa.append(cs[n]['y'])
         salida[i]= (cs[n]['y'])
 
     s = np.zeros_like(salida, dtype=int)
     s[salida.argmax(0)] = 1
-    print(s)
+    print("Entradas primer capa: ", entradas_primer_capa)
+    print("Salidas primer capa: ", salidas_primer_capa)
+    print("Entradas segunda capa: ", entradas_segunda_capa)
+    print("Salidas segunda capa: ", salidas_segunda_capa)
+    print("Entradas tercera capa: ", entradas_salida_capa)
+    print("Salidas tercera capa: ", salidas_salida_capa)
+    print("Salida: ", s)
+    error = y - s """
+    #(s, y, error)
+
+w1 = np.random.rand(5, 100)
+w2 = np.random.rand(5, 5)
+w3 = np.random.rand(3, 5)
+
+for letra in data_train[:1]:
+    x = letra[0]
+    y = letra[1]
+    Z1 = w1.dot(x) + b1
+    A1 = lineal(Z1)
+    Z2 = w2.dot(A1) + b2
+    A2 = lineal(Z2)
+    Z3 = (w3.dot(A2) + b3)
+    Z3 = Z3/np.max(Z3)
+    print("z3: ", Z3)
+    A3 = sigmoide(Z3)
+    Y = np.zeros_like(np.empty(3, dtype=float), dtype=int)
+    Y[np.empty(3, dtype=float).argmax(0)] = 1     
+    print(Z1)
+    print(A1)
+    print(Z2)
+    print(A2)
+    print(Z3)
+    print(A3)
+    print(Y)
+    errores = y - Y
+    print(errores)
+
+prueba = np.array([1,2,4,5])
+print(prueba)
+#print(w3)
 
 
 
