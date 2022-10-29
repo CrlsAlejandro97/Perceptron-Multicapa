@@ -1,13 +1,16 @@
 import numpy as np
 
+#Funciones de Activacion
 def sigmoide(x):
     return 1 / (1 + np.exp(-x))
 
-def derivate_sigmoide(x):
-    return (sigmoide(x))*(1-sigmoide(x))
-
 def lineal(x):
     return x
+
+#Derivadas
+def derivate_sigmoide(x):
+    return x*(1-x)
+
 
 def adjustment_weight(w,x,alfa,err):
  #w: vector de pesos
