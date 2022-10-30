@@ -5,7 +5,7 @@ def sigmoide(x):
     return 1/(1+np.exp(-x))
 
 def lineal(x):
-    return x
+    return x*0.1
 
 def adjustment_weight(w,x,alfa,err):
  #w: vector de pesos

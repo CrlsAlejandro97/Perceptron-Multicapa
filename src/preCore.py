@@ -1,7 +1,6 @@
 import pandas as pd
 import numpy as np
 import random
-import matplotlib.pyplot as plt
 from function import lineal, sigmoide
 import os 
 
@@ -206,36 +205,39 @@ w2 = np.random.rand(5, 5)
 w3 = np.random.rand(3, 5)
 
 for letra in data_train[:1]:
-    x = letra[0]
+    x = letra[0] 
     y = letra[1]
     Z1 = w1.dot(x) + b1
     A1 = lineal(Z1)
     Z2 = w2.dot(A1) + b2
     A2 = lineal(Z2)
     Z3 = (w3.dot(A2) + b3)
-    Z3 = Z3/np.max(Z3)
-    print("z3: ", Z3)
     A3 = sigmoide(Z3)
-    Y = np.zeros_like(np.empty(3, dtype=float), dtype=int)
-    Y[np.empty(3, dtype=float).argmax(0)] = 1     
-    print(Z1)
-    print(A1)
-    print(Z2)
-    print(A2)
-    print(Z3)
-    print(A3)
-    print(Y)
-    errores = y - Y
-    print(errores)
+    Y = np.zeros_like(A3, dtype=int)
+    Y[A3.argmax(0)] = 1     
+    print("z1: ", Z1)
+    print("a1: ", A1)
+    print("z2: ", Z2)
+    print("a2: ",A2)
+    print("z3: ",Z3)
+    print("a3: ",A3)
+    print("y: ",Y)
+    #e: Resta entre los outputs obtenidos y los deseados
+    e = Y - y
+    cost = 0
+    for i in range(len(Y)):
+        cost+=0.5*(e[i])**2
+    
+    print("w3 antes de backpropagation: ", w3)
+    print(str(e[0]))
+    print(Y[0])
+    print(1-Y[0])
+    print(A2[0])
+    for i in range(len(w3)):
+        delta_w = (e[i])*Y[i]*(1-Y[i])*A2
+        print(coeficiente_aprendizaje*delta_w)
+        w3[i] = w3[i] - coeficiente_aprendizaje*delta_w
+    
+    print("w3 despues de backpropagation: ", w3)    
 
-prueba = np.array([1,2,4,5])
-print(prueba)
 #print(w3)
-
-
-
-
-
-
-
-
