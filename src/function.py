@@ -14,10 +14,10 @@ def derivate_sigmoide(x):
 def derivate_lineal(x):
     return 1 
 
-def error(ye,ys):
+def derivate_error(ye,ys):
     #ye es el valor esperado
     #ys es el valor calculado por la funcion de activacion
-    return ye-ys
+    return -(ye-ys)
 
 def deltaHidden(w,a,deltaInput):
     
@@ -28,7 +28,7 @@ def Backpropagation(ye,A,W):
     #A: vector de salidas de activacion
     #W: pesos de las capas
     ultOut = np.array(A[len(A)])
-    deltaOut = []
+    deltaOut = derivate_error(ye,A[len(A)])*
     #Delta de la capa de salida
     for i in range(len(ultOut)):
         derivate_error =-error(ye[i],A[i])
