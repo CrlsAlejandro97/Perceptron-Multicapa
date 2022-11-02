@@ -11,10 +11,34 @@ def lineal(x):
 def derivate_sigmoide(x):
     return x*(1-x)
 
+def derivate_lineal(x):
+    return 1 
 
-def adjustment_weight(w,x,alfa,err):
- #w: vector de pesos
- #x: vector de entrada
- #alfa: factor de aprendizaje
- #err: error de prediccion
- return w+(0.5*x*alfa*err)
+def error(ye,ys):
+    #ye es el valor esperado
+    #ys es el valor calculado por la funcion de activacion
+    return ye-ys
+
+def deltaHidden(w,a,deltaInput):
+    
+
+
+def Backpropagation(ye,A,W):
+    #Ye: es la salida espera
+    #A: vector de salidas de activacion
+    #W: pesos de las capas
+    ultOut = np.array(A[len(A)])
+    deltaOut = []
+    #Delta de la capa de salida
+    for i in range(len(ultOut)):
+        derivate_error =-error(ye[i],A[i])
+        deltaOut.append(derivate_error*derivate_sigmoide(ultOut[j]))
+    deltaOut = np.array(deltaOut)
+
+    #Delta de capas ocultas
+
+
+     
+
+
+
