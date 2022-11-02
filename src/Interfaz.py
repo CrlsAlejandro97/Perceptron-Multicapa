@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import Button, Frame, ttk
-import numpy as np
+from fu
 
 class Interfaz:
     def __init__(self, geometry, width, height):
