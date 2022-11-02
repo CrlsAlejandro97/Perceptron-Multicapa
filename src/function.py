@@ -23,19 +23,14 @@ def deltaHidden(w,a,deltaInput):
     
 
 
-def Backpropagation(ye,A,W):
-    #Ye: es la salida espera
-    #A: vector de salidas de activacion
-    #W: pesos de las capas
-    ultOut = np.array(A[len(A)])
-    deltaOut = derivate_error(ye,A[len(A)])*
-    #Delta de la capa de salida
-    for i in range(len(ultOut)):
-        derivate_error =-error(ye[i],A[i])
-        deltaOut.append(derivate_error*derivate_sigmoide(ultOut[j]))
-    deltaOut = np.array(deltaOut)
-
-    #Delta de capas ocultas
+# def Backpropagation(ye,A,W):
+#     #Ye: es la salida espera
+#     #A: vector de salidas de activacion
+#     #W: pesos de las capas
+#     #Delta de capas ocultas
+#     deltaOut = derivate_error(ye,A[len(A)])*derivate_sigmoide(A[len(A)])
+#     #Delta de la capa de salida
+#     #Delta de capas ocultas
 
 
      
