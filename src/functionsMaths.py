@@ -17,9 +17,4 @@ def lineal_derivate():
 def cost_derivate(activation,y):
     return (activation - y)
 
-def adjustment_weight(w,x,alfa,err):
- #w: vector de pesos
- #x: vector de entrada
- #alfa: factor de aprendizaje
- #err: error de prediccion
- return w+(0.5*x*alfa*err)
+
