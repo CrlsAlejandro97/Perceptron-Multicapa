@@ -20,17 +20,25 @@ def derivate_error(ye,ys):
     return -(ye-ys)
 
 def deltaHidden(w,a,deltaInput):
+
+    for layer in reversed(w):
+        w = np.transpose(layer)
+        for i in range(len(w)):
+            delta.append(w[i]*deltaInput)
+
     
 
 
-# def Backpropagation(ye,A,W):
-#     #Ye: es la salida espera
-#     #A: vector de salidas de activacion
-#     #W: pesos de las capas
-#     #Delta de capas ocultas
-#     deltaOut = derivate_error(ye,A[len(A)])*derivate_sigmoide(A[len(A)])
-#     #Delta de la capa de salida
-#     #Delta de capas ocultas
+def Backpropagation(ye,A,W):
+    #Ye: es la salida espera
+    #A: vector de salidas de activacion
+    #W: pesos de las capas
+
+    #Delta de capa de salida
+    deltaOut = derivate_error(ye,A[len(A)])*derivate_sigmoide(A[len(A)])
+    
+    #Delta de capas ocultas
+
 
 
      
