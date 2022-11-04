@@ -1,5 +1,5 @@
 import numpy as np
-import function as f
+import functionsMaths as f
 
 class Perceptron(object):
     def __init__(self, sizes, aprendizaje, momento):
