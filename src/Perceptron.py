@@ -1,5 +1,5 @@
 import numpy as np
-import random
+import function as f
 
 class Perceptron(object):
     def __init__(self, sizes, aprendizaje, momento):
@@ -10,13 +10,30 @@ class Perceptron(object):
     def init_params(self):
         w = []
         b = []
-        w.append(np.random.rand(self.sizes[0], 100))
-        if len(self.sizes) > 1:
-            w.append(np.random.rand(self.sizes[1], self.sizes[0]))
-            w.append(np.random.rand(3, self.sizes[1]))
-        else:
-            w.append(np.random.rand(3, self.sizes[0]))
-        
+        w1 = np.random.rand(self.sizes[0], 100)
+        b1 = np.random.rand(1, self.sizes[0])[0]
+
+        if len(self.sizes) == 2:
+
+            w2 = np.random.rand(self.sizes[1], self.sizes[0])
+            w3 = np.random.rand(3, self.sizes[1])
+            b2 = np.random.rand(1, self.sizes[1])[0]
+            b3 = np.random.rand(1, 3)[0]
+            w.append(w1)
+            w.append(w2)
+            w.append(w3)
+            b.append(b1)
+            b.append(b2)
+            b.append(b3)
+    
+        elif len(self.sizes) == 1:
+            w2 = np.random.rand(3, self.sizes[0])
+            b2 = np.random.rand(1, 3)[0]
+            w.append(w1)
+            w.append(w2)
+            b.append(b1)
+            b.append(b2)
+
         self.w = w
         self.b = b
         return w, b
@@ -44,8 +61,110 @@ class Perceptron(object):
 
         w = self.w
         b = self.b
+        print(b[0])
+        print(str(len(b)))
+        print(str(len(b[0])))
 
-        
+
+        for e in range(50):
+            np.random.shuffle(letras_train)
+            
+            """ 
+                for epoca 
+
+                feedforward(x_train , w, b) ==> retorna la salida de la ultima capa
+                backpropagation(y_train, salida_obtenida, w, b, capas) => retorna una lista de deltas para cada capa 
+                gradiente_descent(delta, aprendizaje, momento, w, b) => retorna los pesos actualizados
+
+                for i in range(len(w)):
+
+            """
+            for i in range(len(letras_train)):
+                # feedforward
+                #Primer capa oculta
+                ys1 =[]
+                z1 = []
+                deltas = []
+                zs = []
+                activaciones = [letras_train[i][0]]
+                for j in range(len(w[0])):
+                    #Suma ponderada
+                    Z1 = np.dot(letras_train[i][0],w[0][j])
+                    #Funcion de activacion
+                    ys1.append(f.lineal(Z1+b[0][j]))
+                    z1.append(Z1)
+                
+                z1 = np.array(z1)
+                ys1 = np.array(ys1)
+
+                activaciones.append(ys1)
+                zs.append(z1)
+                #Segunda capa
+                ys2 = []
+                z2 = []
+                for j in range(len(w[1])):
+                    #Suma ponderada
+                    Z2 = np.dot(ys1,w[1][j])
+                    #Funcion de activacion
+                    ys2.append(f.lineal(Z2+b[1][j]))
+                    z2.append(Z2)
+                
+                z2 = np.array(z2)
+                ys2 = np.array(ys2)
+                
+                activaciones.append(ys2)
+                zs.append(z2)
+                #Capa de salida
+                ys3 = []
+                z3 = []
+                for j in range(len(w[2])):
+                    #Suma ponderada
+                    Z3 = np.dot(ys2,w[2][j])
+                    #Funcion de activacion
+                    ys3.append(f.sigmoide(Z3+b[2][j]))
+                    z3.append(Z3)
+                #print("Capa salida: ", ys3)
+                #!!-----Calculo del error-----!!!
+
+                ys3 = np.array(ys3)
+                z3 = np.array(z3)
+
+                activaciones.append(ys3)
+                zs.append(z3)
+
+                Ye = np.array(letras_train[i][1])
+                #----------------------------------------------------#
+
+                delta = f.cost_derivate(activaciones[3], Ye)*f.sigmoide_derivate(z3)
+                delta = np.array(delta)
+                b[2] -= delta*0.3 
+
+                deltas.append(delta)
+                ##print(ys3, letras_train[i][1],delta)
+                #CAPA OCULTA N° 2
+                delta2 = np.dot(np.transpose(w[2]),deltas[0])*f.lineal_derivate()
+                b[1] -= delta2*0.3
+
+                deltas.append(delta2)
+
+                #CAPA OCULTA N° 1
+                delta1 = np.dot(np.transpose(w[1]),deltas[1])*f.lineal_derivate()
+                b[0] -= delta1*0.3
+
+                deltas.append(delta1)
+
+                #Backforward
+                for j in range(len(w[2])):
+                    for k in range(len(w[1])):
+                        w[2][j][k] -= activaciones[2][k]*deltas[0][j]*0.3
+                
+                for j in range(len(w[1])):
+                    for k in range(len(w[0])):
+                        w[1][j][k] -= activaciones[1][k]*deltas[1][j]*0.3
+
+                for j in range(len(w[0])):
+                    for k in range(100):
+                        w[0][j][k] -= activaciones[0][k]*deltas[2][j]*0.3 
 
     def _divX_Y(letras):
         for letra in letras:

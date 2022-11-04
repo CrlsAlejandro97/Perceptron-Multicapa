@@ -14,9 +14,10 @@ class Controller:
 
     def generar_data(self):
         cantidad = str(self.view.opcion_generar.get())
+        print(cantidad)
         generar_data_letras(cantidad)
         distorsionar_letras(cantidad)
-        #self.view.create_label("Dataset generado!", row=2, column=2, columnspan=10)
+        self.view.create_label("Dataset generado!", row=2, column=2, columnspan=10)
     
 
     def train(self):
@@ -25,7 +26,9 @@ class Controller:
         data_train = letras[:int(len(letras)*0.8)]
         data_test = letras[int(len(letras)*0.8)+1:int(len(letras)*0.8)+int(len(letras)*0.15)]
         data_validation = letras[int(len(letras)*0.8)+int(len(letras)*0.15)+1:99]
+        print(self.perceptron.w[0][0][0])
         self.perceptron.train(data_train)
+        print(self.perceptron.w[0][0][0])
             
 
     def create_perceptron(self):
