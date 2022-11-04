@@ -37,10 +37,10 @@ def deltaHidden(w,deltaInput):
     DELTA = []
     DELTA.append(deltaInput)
     for layer in reversed(w):
-        w = np.transpose(layer)
+        wl = np.transpose(layer)
         delta=[]
         for i in range(len(w)):
-            delta.append(np.sum(w[i]*deltaInput)*derivate_lineal())
+            delta.append(np.sum(wl[i]*deltaInput)*derivate_lineal())
         DELTA.append(delta)
         deltaInput =np.array(delta)
     
@@ -57,6 +57,11 @@ def Backpropagation(ye,A,W):
     deltaOut = derivate_error(ye,A[len(A)-1])*derivate_sigmoide(A[len(A)-1])
     #Deltas de salida
     return deltaHidden(W,deltaOut)
+
+"""def backforward(W,activations, deltas, lr, m):
+
+    for w in W:
+        for j in range(len(w))"""
 
 
 
