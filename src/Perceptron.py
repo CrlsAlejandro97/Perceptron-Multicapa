@@ -50,7 +50,37 @@ class Perceptron(object):
         capas = [capa_entrada, *capas_ocultas, capa_salida]
         self.capas = capas
         return capas
-    
+
+    def feedforward(self, x, w, b, cant_capas):
+        z = [x]
+        y = [x] 
+        #cant_capas = 4
+        for i in range(cant_capas-1):
+            yi = []
+            zi = []
+            for j in range(len(w[i])):
+                #Suma ponderada
+                """ print("i: ", str(i), "j: ", str(j))
+                print("y[0]: " ,y[i]) """
+                entrada = np.dot(y[i],w[i][j])
+                #Funcion de activacion
+                if i == cant_capas - 2:
+                    salida = f.sigmoide(entrada+b[i][j])
+                else:
+                    salida = f.lineal(entrada+b[i][j])
+                zi.append(entrada)
+                yi.append(salida)
+            y.append(np.array(yi))
+            print()
+            z.append(np.array(zi))
+        
+        print(len(y))
+        
+        print("Capa salida de la funcion: ", y[-1])
+        return y[-1]
+
+
+
     def train(self, data_train):
         #Dividiendo data train en una tupla (entrada,clase)
         letras_train = []
@@ -61,12 +91,8 @@ class Perceptron(object):
 
         w = self.w
         b = self.b
-        print(b[0])
-        print(str(len(b)))
-        print(str(len(b[0])))
-
-
-        for e in range(50):
+  
+        for e in range(1):
             np.random.shuffle(letras_train)
             
             """ 
@@ -79,8 +105,10 @@ class Perceptron(object):
                 for i in range(len(w)):
 
             """
-            for i in range(len(letras_train)):
+            for i in range(1):
+
                 # feedforward
+                cant_capas = len(self.sizes)+2
                 #Primer capa oculta
                 ys1 =[]
                 z1 = []
@@ -123,7 +151,8 @@ class Perceptron(object):
                     #Funcion de activacion
                     ys3.append(f.sigmoide(Z3+b[2][j]))
                     z3.append(Z3)
-                #print("Capa salida: ", ys3)
+                print("Capa salida: ", ys3)
+                self.feedforward(letras_train[i][0], w, b, cant_capas)
                 #!!-----Calculo del error-----!!!
 
                 ys3 = np.array(ys3)
@@ -174,4 +203,10 @@ class Perceptron(object):
 
     
 
-    
+
+w3 = np.random.rand(3, 5)
+delta = np.array([0.3, 0.05, 0.17])
+
+""" print(w3)
+print(np.transpose(w3)) """
+print(np.dot(np.transpose(w3),delta)*f.lineal_derivate())
