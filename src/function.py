@@ -62,22 +62,27 @@ def Backpropagation(ye,A,W):
     return deltaOut
 
 def Gradientdescent(deltas,W,Want,alfa,beta):
-    i=0
+    d=0
     Wres = []
+    Wnext = []
     #Calculo para nuevos pesos
-    for w, want in zip(W, Want):
+    for i in range(len(W)):
         waux = []
-        wl = np.transpose(w)
-        wlant = np.transpose(want)
+        new_weight = []
+        wl = np.transpose(W[i])
+        wlant = np.transpose(Want[i])
         for j in range(len(wl)):
-           waux.append(wl[j])
-           wl[j] = wl[j] + deltas[i]*alfa #+ beta*(wl[j] - wlant[j])
-        i=i+1
-        #Wres.append(np.array(waux))
-    Want = Wres
-
+           waux.append(np.transpose(wl[j]))
+           new_weight.append(wl[j] - deltas[d]*alfa + beta*(wl[j] - wlant[j]))
+        d=d+1
+        waux = np.array(waux)
+        new_weight = np.array(new_weight)
+        Wres.append(np.transpose(waux))
+        Wnext.append(np.transpose(new_weight))
     
-    return Want, W
+    return Wres,Wnext
+    
+
 
 
 
