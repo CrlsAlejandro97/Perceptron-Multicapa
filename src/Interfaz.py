@@ -16,6 +16,7 @@ class Interfaz:
         frame.place(relx=0,rely=0)
 
         # Transformo el arreglo de una letra a una matriz de 10x10
+        print(letra)
         letra_2d = np.reshape(letra, (10,10))
         list_btn = []
         for i in range(10):
@@ -26,7 +27,7 @@ class Interfaz:
                 if (letra_2d[i][j] ==1 ):
                     list_btn[i][j].config(bg="blue", borderwidth ="1", activebackground="orange", relief="solid")
                 list_btn[i][j].place(relx = 0.08 + 0.08*j, rely = 0.09 + 0.09*i, relwidth= 0.08, relheight=0.09) 
-        print("Distorsion de letra: ", distorsion)
+        print("Distorsion de letra: ", str(distorsion))
         root.mainloop()
 
 
