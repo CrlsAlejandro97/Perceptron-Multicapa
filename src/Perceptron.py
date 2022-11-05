@@ -79,61 +79,38 @@ class Perceptron(object):
         return y
 
 
-    def backpropagation(self, ye, y, w):
-        #Ye: es la salida espera
-        #A: vector de salidas de activacion --> se podria eliminar y pasar solo la salida
-        #W: pesos de las capas
+    def backpropagation(self, ye, ys3, w):
+        #ye: salida espera
+        #ys3: salida obtenida
+        #W:  vector peso de las capas
+
         #Delta de capa de salida
-        deltas = []
-        delta_out = f.derivate_error(ye,y[-1])*f.derivate_sigmoide(y[-1])
-        delta_out = np.array(delta_out)
-        deltas.append(delta_out)
+        deltaOut = f.derivate_error(ys3,ye)*f.derivate_sigmoide(ys3)
+        deltas =[]
+        deltas.append(deltaOut)
+        i=0
         for wi in reversed(w):
-            delta=[]
-            wt = np.transpose(wi)
-            for i in range(len(wt)):
-                delta.append(np.sum(wt[i]*deltas[-1])*f.derivate_lineal())
+            delta = np.dot(np.transpose(wi),deltas[i])*f.derivate_lineal()
             deltas.append(delta)
-            #deltaInput =np.array(delta)
+            i=i+1
+        
+        return deltas[::-1]
         
     
         return list(reversed(deltas))
 
     def gradiente_descendente(self, w, deltas, y):
-        
-        for i in range(len(w)-1, -1, -1):
+        #deltas 
+        for i in range(len(w)):
             for j in range(len(w[i])):
-                if i>0:
+                if i > 0:
                     for k in range(len(w[i-1])):
-                        w[i][j][k] -= y[i][j]*deltas[i][j]*0.3
-                    
+                        w[i][j][k]-= y[i][k]*deltas[i][j]*0.3
                 else:
                     for k in range(100):
-                        w[i][j][k] -= y[i][j]*deltas[i][j]*0.3
+                        w[i][j][k]-= y[i][k]*deltas[i][j]*0.3
         return w
             
-    """ def predict(self, letra):
-        letra = ["b","d","f"]
-        porcentaje = 0
-    
-        for i in range(self.cant_capas-1):
-            yi = []
-            zi = []
-            for j in range(len(w[i])):
-                #Suma ponderada
-                entrada = np.dot(y[i],w[i][j])
-                #Funcion de activacion
-                if i == self.cant_capas - 2:
-                    salida = f.sigmoide(entrada+b[i][j])
-                else:
-                    salida = f.lineal(entrada+b[i][j])
-                zi.append(entrada)
-                yi.append(salida)
-            y.append(np.array(yi))
-            z.append(np.array(zi))
-        
-
-        return y """
 
     def train(self, data_train):
         #Dividiendo data train en una tupla (entrada,clase)
@@ -148,7 +125,7 @@ class Perceptron(object):
         b = self.b
         err = []
   
-        for e in range(50):
+        for e in range(1):
             np.random.shuffle(letras_train)
             for i in range(len(letras_train)):
 
@@ -169,15 +146,15 @@ class Perceptron(object):
                 #----------------------------------------------------#
 
                 #BACKPROPAGATION le paso la salida esperada, las salidas de las capas y los pesos a partir de la segunda capa
-                deltas = self.backpropagation(ye, y, w[1:])
+                deltas = self.backpropagation(ye, y[-1], w[1:])
+                
                 #Backforward
                 #w_prueba = w.copy()
 
                 #Gradiente descendiete: Le paso los pesos, los deltas y las salidas de las capas
-                w = self.gradiente_descendente(w, deltas, y[1:])
-                #print(w_prueba[2])
-                #len w[2] = 3
-                #len w[1] = 5
+                print("w antes de actualizar: ", w[2])
+                w = self.gradiente_descendente(w, deltas, y[:3])
+                print("w despues de actualizar: ", w[2])
                         
                 
 
@@ -186,17 +163,13 @@ class Perceptron(object):
 
         self.w = w
         self.b = b
-
-        letra = ["b","d","f"]
-        porcentaje = 0 
-        cant=0
-        
+        """ letra = ["b","d","f"]
+        porcentaje = 0
         for i in range(len(letras_train)):
             y = self.feedforward(letras_train[i][0], self.w, self.b)
             salida = np.zeros_like(y[-1])
             salida = y[-1]
-            print(salida)
-            """ if(np.argmax(salida) == np.argmax(letras_train[i][1])):
+            if(np.argmax(salida) == np.argmax(letras_train[i][1])):
                 porcentaje += 1
                 print("Prediccion: {} letra: {} ---- valor real: {}, letra: {}".format( np.argmax(salida)+1,letra[ np.argmax(salida)],np.argmax(letras_train[i][1])+1,letra[np.argmax(letras_train[i][1])] ))
         print("Porcentaje predicho: {}%".format((porcentaje/len(letras_train))*100)) """
@@ -224,12 +197,4 @@ capas = perceptron.init_layers()
 
 perceptron.train(data_train)
 
-clases = {
-    'b': [1, 0, 0],
-    'd': [0, 1, 0],
-    'f': [0, 0, 1]
-}
 
-""" letra = "b"
-distorsion = 0.2
-codificar_letra(letra) """

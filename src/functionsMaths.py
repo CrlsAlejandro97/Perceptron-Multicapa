@@ -17,6 +17,6 @@ def derivate_lineal():
 def derivate_error(ye,ys):
     #ye es el valor esperado
     #ys es el valor calculado por la funcion de activacion
-    return -(ye-ys)
+    return (ys-ye)
 
 
