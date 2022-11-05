@@ -73,8 +73,8 @@ def Gradientdescent(deltas,W,Want,activations,B,alfa,beta):
         #Actualizacion de bias
         B[i] = B[i] - alfa*deltas[i]
         for j in range(len(wl)):
-           waux.append(np.transpose(wl[j]))
-           new_weight.append(wl[j] - alfa*deltas[i]*activations[i] + beta*(wl[j] - wlant[j]))
+           waux.append(wl[j])
+           new_weight.append(wl[j] - alfa*deltas[i]*activations[i]) #+ beta*(wl[j] - wlant[j]))
         waux = np.array(waux)
         new_weight = np.array(new_weight)
         Wres.append(np.transpose(waux))
