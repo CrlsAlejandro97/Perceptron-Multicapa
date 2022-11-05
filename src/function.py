@@ -67,12 +67,15 @@ def Gradientdescent(deltas,W,Want,alfa,beta,):
     #Calculo para nuevos pesos
     for w, want in zip(W, Want):
         waux = []
-        for j in range(len(w)):
-           waux.append(np.array(w[j]))
-           w[j] = w[j] + deltas[i]*alfa + beta*(w[j] - want[j])
+        wl = np.transpose(w)
+        wlant = np.transpose(want)
+        for j in range(len(wl)):
+           waux.append(np.array(wl[j]))
+           wl[j] = wl[j] + deltas[i]*alfa + beta*(wl[j] - wlant[j])
         i=i+1
         Wres.append(np.array(waux))
     Want = Wres
+    return Want, W
 
 
 
