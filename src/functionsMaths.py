@@ -56,3 +56,31 @@ def Gradientdescent(deltas,W,Want,activations,B,alfa,beta):
         Wnext.append(new_weight)
     
     return Wres,Wnext,B
+
+def feedforward(self, x, w, b, cant_capas):
+        z = [x]
+        y = [x] 
+        #cant_capas = 4
+        for i in range(cant_capas-1):
+            yi = []
+            zi = []
+            for j in range(len(w[i])):
+                #Suma ponderada
+                """ print("i: ", str(i), "j: ", str(j))
+                print("y[0]: " ,y[i]) """
+                entrada = np.dot(y[i],w[i][j])
+                #Funcion de activacion
+                if i == cant_capas - 2:
+                    salida = f.sigmoide(entrada+b[i][j])
+                else:
+                    salida = f.lineal(entrada+b[i][j])
+                zi.append(entrada)
+                yi.append(salida)
+            y.append(np.array(yi))
+            print()
+            z.append(np.array(zi))
+        
+        print(len(y))
+        
+        print("Capa salida de la funcion: ", y[-1])
+        return y[-1]
