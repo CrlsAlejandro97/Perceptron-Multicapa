@@ -58,7 +58,18 @@ def Backpropagation(ye,A,W):
     #Deltas de salida
     return deltaHidden(W,deltaOut)
 
-#def Gradientdescent(deltas,W,alfa):
+def Gradientdescent(deltas,W,Want,alfa,beta,):
+    i=0
+    Wnext= []
+    for w, want in zip(reversed(W),reversed(Want)):
+        new_weight = []
+        wl = np.transpose(w)
+        wlant = np.transpose(want)
+        for j in range(len(wl)):
+            new_weight.append(wl[j]+deltas[i]*alfa+beta*(wl[j]-wlant[j]))
+        i=i+1
+        Wnext.append(np.array(new_weight))
+    return Wnext
 
 
     
