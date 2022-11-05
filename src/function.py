@@ -56,20 +56,24 @@ def Backpropagation(ye,A,W):
     #Delta de capa de salida
     deltaOut = derivate_error(ye,A[len(A)-1])*derivate_sigmoide(A[len(A)-1])
     #Deltas de salida
-    return deltaHidden(W,deltaOut)
+    deltaOut = deltaHidden(W,deltaOut)
+    #Ordenamos delta de inicio a fin
+    deltaOut = deltaOut[::-1]
+    return deltaOut
 
 def Gradientdescent(deltas,W,Want,alfa,beta,):
     i=0
-    Wnext= []
-    for w, want in zip(reversed(W),reversed(Want)):
-        new_weight = []
-        wl = np.transpose(w)
-        wlant = np.transpose(want)
-        for j in range(len(wl)):
-            new_weight.append(wl[j]+deltas[i]*alfa+beta*(wl[j]-wlant[j]))
+    Wres = []
+    #Calculo para nuevos pesos
+    for w, want in zip(W, Want):
+        waux = []
+        for j in range(len(w)):
+           waux.append(np.array(w[j]))
+           w[j] = w[j] + deltas[i]*alfa + beta*(w[j] - want[j])
         i=i+1
-        Wnext.append(np.array(new_weight))
-    return Wnext
+        Wres.append(np.array(waux))
+    Want = Wres
+
 
 
     
