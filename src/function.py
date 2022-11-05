@@ -79,11 +79,11 @@ def Gradientdescent(deltas,W,Want,activations,B,alfa,beta):
         B[i] = B[i] - alfa*deltas[i]
         for j in range(len(W[i])):
            waux.append(W[i][j])
-           new_weight.append(W[i][j] - alfa*deltas[i]*activations[i]) #+ beta*(wl[j] - wlant[j]))
+           new_weight.append(W[i][j] - alfa*deltas[i][j]*activations[i] + beta*(W[i][j] - Want[i][j]))
         waux = np.array(waux)
         new_weight = np.array(new_weight)
-        Wres.append(np.transpose(waux))
-        Wnext.append(np.transpose(new_weight))
+        Wres.append(waux)
+        Wnext.append(new_weight)
     
     return Wres,Wnext,B
     
