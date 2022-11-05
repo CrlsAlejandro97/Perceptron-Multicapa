@@ -5,7 +5,7 @@ def sigmoide(x):
     return 1 / (1 + np.exp(-x))
 
 def lineal(x):
-    return 0.1*x
+    return x*0.1
 
 #Derivadas
 def derivate_sigmoide(x):
