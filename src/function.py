@@ -5,14 +5,14 @@ def sigmoide(x):
     return 1 / (1 + np.exp(-x))
 
 def lineal(x):
-    return x
+    return 0.1*x
 
 #Derivadas
 def derivate_sigmoide(x):
     return x*(1-x)
 
 def derivate_lineal():
-    return 1 
+    return 0.1 
 
 def derivate_error(ye,ys):
     #ye es el valor esperado
@@ -32,14 +32,14 @@ def derivate_error(ye,ys):
             y.append(lineal(Z+B[j]))
         Y.append(np.array(y))"""
 
-def deltaHidden(w,deltaInput):
+def deltaHidden(W,deltaInput):
     #a no se usa porque f.activacion es lineal
     DELTA = []
     DELTA.append(deltaInput)
-    for layer in reversed(w):
+    for layer in reversed(W):
         wl = np.transpose(layer)
         delta=[]
-        for i in range(len(w)):
+        for i in range(len(wl)):
             delta.append(np.sum(wl[i]*deltaInput)*derivate_lineal())
         DELTA.append(delta)
         deltaInput =np.array(delta)
@@ -58,11 +58,7 @@ def Backpropagation(ye,A,W):
     #Deltas de salida
     return deltaHidden(W,deltaOut)
 
-"""def backforward(W,activations, deltas, lr, m):
-
-    for w in W:
-        for j in range(len(w))"""
-
+#def Gradientdescent(deltas,W,alfa):
 
 
     
