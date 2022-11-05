@@ -68,7 +68,7 @@ def Gradientdescent(deltas,W,Want,activations,B,alfa,beta):
            #Resguardo peso actual
            waux.append(W[i][j])
            #Peso actualizado
-           new_weight.append(W[i][j] - alfa*deltas[i][j]*activations[i] + beta*(W[i][j] - Want[i][j]))
+           new_weight.append(W[i][j] - alfa*deltas[i][j]*activations[i]) #+ beta*(W[i][j] - Want[i][j]))
         waux = np.array(waux)
         new_weight = np.array(new_weight)
         Wres.append(waux)
