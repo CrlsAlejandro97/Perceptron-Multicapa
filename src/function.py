@@ -14,10 +14,10 @@ def derivate_sigmoide(x):
 def derivate_lineal():
     return 0.1 
 
-def derivate_error(ye,ys):
+def derivate_error(ys,ye):
     #ye es el valor esperado
     #ys es el valor calculado por la funcion de activacion
-    return -(ye-ys)
+    return (ys-ye)
 
 #------------------------------
 """def feedFoward(X,W,B,layers):
@@ -48,18 +48,25 @@ def deltaHidden(W,deltaInput):
     
 
 
-def Backpropagation(ye,ys3,W):
+def calculateDelta(ye,ys3,W):
     #Ye: es la salida espera
     #A: vector de salidas de activacion --> se podria eliminar y pasar solo la salida
     #W: pesos de las capas
 
     #Delta de capa de salida
-    deltaOut = derivate_error(ye,ys3)*derivate_sigmoide(ys3)
+    deltaOut = derivate_error(ys3,ye)*derivate_sigmoide(ys3)
     #Deltas de salida
-    deltaOut = deltaHidden(W,deltaOut)
+    #deltaOut = deltaHidden(W,deltaOut)
     #Ordenamos delta de inicio a fin
-    deltaOut = deltaOut[::-1]
-    return deltaOut
+    #deltaOut = deltaOut[::-1]
+    deltas =[]
+    deltas.append(deltaOut)
+    i=0
+    for w in reversed(W):
+      delta = np.dot(np.transpose(w),deltas[i])*derivate_lineal()
+      deltas.append(delta)
+      i=i+1
+    return deltas[::-1]
 
 def Gradientdescent(deltas,W,Want,activations,B,alfa,beta):
     Wres = []
@@ -68,13 +75,11 @@ def Gradientdescent(deltas,W,Want,activations,B,alfa,beta):
     for i in range(len(W)):
         waux = []
         new_weight = []
-        wl = np.transpose(W[i])
-        wlant = np.transpose(Want[i])
         #Actualizacion de bias
         B[i] = B[i] - alfa*deltas[i]
-        for j in range(len(wl)):
-           waux.append(wl[j])
-           new_weight.append(wl[j] - alfa*deltas[i]*activations[i]) #+ beta*(wl[j] - wlant[j]))
+        for j in range(len(W[i])):
+           waux.append(W[i][j])
+           new_weight.append(W[i][j] - alfa*deltas[i]*activations[i]) #+ beta*(wl[j] - wlant[j]))
         waux = np.array(waux)
         new_weight = np.array(new_weight)
         Wres.append(np.transpose(waux))
