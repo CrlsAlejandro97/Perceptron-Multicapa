@@ -48,20 +48,20 @@ def deltaHidden(W,deltaInput):
     
 
 
-def Backpropagation(ye,A,W):
+def Backpropagation(ye,ys3,W):
     #Ye: es la salida espera
     #A: vector de salidas de activacion --> se podria eliminar y pasar solo la salida
     #W: pesos de las capas
 
     #Delta de capa de salida
-    deltaOut = derivate_error(ye,A[len(A)-1])*derivate_sigmoide(A[len(A)-1])
+    deltaOut = derivate_error(ye,ys3)*derivate_sigmoide(ys3)
     #Deltas de salida
     deltaOut = deltaHidden(W,deltaOut)
     #Ordenamos delta de inicio a fin
     deltaOut = deltaOut[::-1]
     return deltaOut
 
-def Gradientdescent(deltas,W,Want,alfa,beta):
+def Gradientdescent(deltas,W,Want,activations,alfa,beta):
     d=0
     Wres = []
     Wnext = []
@@ -73,7 +73,7 @@ def Gradientdescent(deltas,W,Want,alfa,beta):
         wlant = np.transpose(Want[i])
         for j in range(len(wl)):
            waux.append(np.transpose(wl[j]))
-           new_weight.append(wl[j] - deltas[d]*alfa + beta*(wl[j] - wlant[j]))
+           new_weight.append(wl[j] - alfa*deltas[d]*activations[d] + beta*(wl[j] - wlant[j]))
         d=d+1
         waux = np.array(waux)
         new_weight = np.array(new_weight)
