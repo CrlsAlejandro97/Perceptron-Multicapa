@@ -75,9 +75,7 @@ class Perceptron(object):
                 yi.append(salida)
             y.append(np.array(yi))
             z.append(np.array(zi))
-        
-        
-            
+         
         return y
 
 
@@ -103,9 +101,6 @@ class Perceptron(object):
 
     def gradiente_descendente(self, w, deltas, y):
         
-        
-        #Backforward
-
         for i in range(len(w)-1, -1, -1):
             for j in range(len(w[i])):
                 if i>0:
@@ -200,12 +195,15 @@ class Perceptron(object):
             y = self.feedforward(letras_train[i][0], self.w, self.b)
             salida = np.zeros_like(y[-1])
             salida = y[-1]
-
-            
+            print(salida)
+            """ if(np.argmax(salida) == np.argmax(letras_train[i][1])):
+                porcentaje += 1
+                print("Prediccion: {} letra: {} ---- valor real: {}, letra: {}".format( np.argmax(salida)+1,letra[ np.argmax(salida)],np.argmax(letras_train[i][1])+1,letra[np.argmax(letras_train[i][1])] ))
+        print("Porcentaje predicho: {}%".format((porcentaje/len(letras_train))*100)) """
         
         
-        for e in err:
-            print(np.mean(e))
+        """ for e in err:
+            print(np.mean(e)) """
 
 
 
