@@ -94,10 +94,9 @@ class Perceptron(object):
             deltas.append(delta)
             i=i+1
         
-        return deltas[::-1]
+        deltas = deltas[::-1]
+        return deltas
         
-    
-        return list(reversed(deltas))
 
     def gradiente_descendente(self, w, deltas, y):
         #deltas 
@@ -125,7 +124,7 @@ class Perceptron(object):
         b = self.b
         err = []
   
-        for e in range(1):
+        for e in range(1000):
             np.random.shuffle(letras_train)
             for i in range(len(letras_train)):
 
@@ -147,14 +146,18 @@ class Perceptron(object):
 
                 #BACKPROPAGATION le paso la salida esperada, las salidas de las capas y los pesos a partir de la segunda capa
                 deltas = self.backpropagation(ye, y[-1], w[1:])
-                
+
+                for j in range(len(b)):
+                    for k in range(len(b[j])):
+                        b[j][k]-=deltas[j][k]*0.3
+
                 #Backforward
                 #w_prueba = w.copy()
 
                 #Gradiente descendiete: Le paso los pesos, los deltas y las salidas de las capas
-                print("w antes de actualizar: ", w[2])
+                
                 w = self.gradiente_descendente(w, deltas, y[:3])
-                print("w despues de actualizar: ", w[2])
+                
                         
                 
 
@@ -163,7 +166,7 @@ class Perceptron(object):
 
         self.w = w
         self.b = b
-        """ letra = ["b","d","f"]
+        letra = ["b","d","f"]
         porcentaje = 0
         for i in range(len(letras_train)):
             y = self.feedforward(letras_train[i][0], self.w, self.b)
@@ -172,11 +175,10 @@ class Perceptron(object):
             if(np.argmax(salida) == np.argmax(letras_train[i][1])):
                 porcentaje += 1
                 print("Prediccion: {} letra: {} ---- valor real: {}, letra: {}".format( np.argmax(salida)+1,letra[ np.argmax(salida)],np.argmax(letras_train[i][1])+1,letra[np.argmax(letras_train[i][1])] ))
-        print("Porcentaje predicho: {}%".format((porcentaje/len(letras_train))*100)) """
+        print("Porcentaje predicho: {}%".format((porcentaje/len(letras_train))*100))
         
         
-        """ for e in err:
-            print(np.mean(e)) """
+        
 
 
 

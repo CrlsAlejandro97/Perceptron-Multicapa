@@ -14,7 +14,7 @@ def derivate_sigmoide(x):
 def derivate_lineal():
     return 0.1
 
-def derivate_error(ye,ys):
+def derivate_error(ys,ye):
     #ye es el valor esperado
     #ys es el valor calculado por la funcion de activacion
     return (ys-ye)
