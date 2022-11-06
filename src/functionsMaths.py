@@ -33,7 +33,7 @@ def calculateDelta(ye,ys3,W):
       i=i+1
     return deltas[::-1]
 
-def Gradientdescent(deltas,W,Want,activations,B,alfa,beta):
+def Gradientdescent_test(deltas,W,Want,activations,B,alfa,beta):
     #Pesos anteriores
     Wres = []
     #Pesos actualizados
@@ -84,3 +84,6 @@ def feedforward(self, x, w, b, cant_capas):
         
         print("Capa salida de la funcion: ", y[-1])
         return y[-1]
+        
+def get_mse(error,n):
+    return error**2/(2*n)
