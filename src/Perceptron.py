@@ -1,14 +1,17 @@
 import numpy as np
 import functionsMaths as f
-from data_functions import generar_data_letras, distorsionar_letras, get_letras
+import data_functions as df
+import matplotlib.pyplot as plt
 
 class Perceptron(object):
-    def __init__(self, sizes, aprendizaje, momento):
+
+    def __init__(self, sizes, aprendizaje, momento, epocas):
 
         self.sizes = sizes
         self.aprendizaje = aprendizaje
         self.momento = momento
         self.cant_capas = len(sizes) + 2
+        self.epocas = epocas
     
     def init_params(self):
         w = []
@@ -98,16 +101,24 @@ class Perceptron(object):
         return deltas
         
 
-    def gradiente_descendente(self, w, deltas, y):
+    def gradiente_descendente(self, w, deltas, y, lr, m):
         #deltas 
+        delta_w = [np.zeros(w.shape) for w in w]
+        w_ant = w
         for i in range(len(w)):
             for j in range(len(w[i])):
                 if i > 0:
                     for k in range(len(w[i-1])):
-                        w[i][j][k]-= y[i][k]*deltas[i][j]*0.3
+
+                        delta_w[i][j][k] = y[i][k]*deltas[i][j]*lr
+                        w[i][j][k] = w[i][j][k] - delta_w[i][j][k]
+                        w[i][j][k] += m*(w_ant[i][j][k] - w[i][j][k])
                 else:
                     for k in range(100):
-                        w[i][j][k]-= y[i][k]*deltas[i][j]*0.3
+
+                        delta_w[i][j][k] = y[i][k]*deltas[i][j]*lr
+                        w[i][j][k] = w[i][j][k] - delta_w[i][j][k]
+                        w[i][j][k] += m*(w_ant[i][j][k] - w[i][j][k])                        
         return w
             
 
@@ -124,7 +135,11 @@ class Perceptron(object):
         b = self.b
         err = []
   
+<<<<<<< HEAD
         for e in range(1):
+=======
+        for e in range(self.epocas):
+>>>>>>> gonza
             np.random.shuffle(letras_train)
             for i in range(len(letras_train)):
 
@@ -156,47 +171,67 @@ class Perceptron(object):
 
                 #Gradiente descendiete: Le paso los pesos, los deltas y las salidas de las capas
                 
-                w = self.gradiente_descendente(w, deltas, y[:3])
+                w = self.gradiente_descendente(w, deltas, y[:3], self.aprendizaje, self.momento)
                 
                         
                 
 
             er = er/(2*len(letras_train))
-            err.append(er)
+            err.append(np.mean(er))
+        self.err = err
 
         self.w = w
         self.b = b
+        
+        
+        
+    def test_train(self, test):
+        
+        letras_test = []
+        for letra in test:
+            x_train = letra[:100]
+            y_train = letra[100:]
+            letras_test.append((x_train, y_train))
+
         letra = ["b","d","f"]
         porcentaje = 0
-        for i in range(len(letras_train)):
-            y = self.feedforward(letras_train[i][0], self.w, self.b)
+        for i in range(len(test)):
+            y = self.feedforward(letras_test[i][0], self.w, self.b)
             salida = np.zeros_like(y[-1])
             salida = y[-1]
-            if(np.argmax(salida) == np.argmax(letras_train[i][1])):
+            if(np.argmax(salida) == np.argmax(letras_test[i][1])):
                 porcentaje += 1
-                print("Prediccion: {} letra: {} ---- valor real: {}, letra: {}".format( np.argmax(salida)+1,letra[ np.argmax(salida)],np.argmax(letras_train[i][1])+1,letra[np.argmax(letras_train[i][1])] ))
-        print("Porcentaje predicho: {}%".format((porcentaje/len(letras_train))*100))
-        
-        
-        
+                print("Prediccion: {} letra: {} ---- valor real: {}, letra: {}".format( np.argmax(salida)+1,letra[ np.argmax(salida)],np.argmax(letras_test[i][1])+1,letra[np.argmax(letras_test[i][1])] ))
+        print("Porcentaje predicho: {}%".format((porcentaje/len(test))*100))    
 
 
 
 
 
+<<<<<<< HEAD
 """ cantidad = "100"
 letras = get_letras(cantidad)
+=======
+cantidad = "100"
+letras = df.get_letras(cantidad)
+>>>>>>> gonza
 data_train = letras[:int(len(letras)*0.8)]
 data_test = letras[int(len(letras)*0.8)+1:int(len(letras)*0.8)+int(len(letras)*0.15)]
 data_validation = letras[int(len(letras)*0.8)+int(len(letras)*0.15)+1:99]
 
 
 
-perceptron = Perceptron([5,5], 0.3, 0.2)
+perceptron = Perceptron([5,5], 0.25, 0.3, 35)
 w, b = perceptron.init_params()
 capas = perceptron.init_layers() """
 
 
 #perceptron.train(data_train)
+
+perceptron.test_train(data_test)
+
+
+
+
 
 

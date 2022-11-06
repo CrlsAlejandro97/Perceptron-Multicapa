@@ -1,3 +1,4 @@
+import os
 from random import shuffle
 import numpy as np
 import pandas as pd
@@ -5,7 +6,7 @@ import csv
 from Distorsionador import Distorsionador
 
 def get_letras(cant):
-    letras = pd.read_csv(f"data/distorsionadas/{cant}/letras.csv",sep=';',header=None).to_numpy()
+    letras = (pd.read_csv(os.path.join(os.path.abspath(''),"src","data","distorsionadas",cant,'letras.csv'),sep=';',header=None)).to_numpy()
     return letras
     
 def leer_letras(path):
