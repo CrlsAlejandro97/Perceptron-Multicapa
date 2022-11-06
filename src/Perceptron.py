@@ -5,13 +5,13 @@ import matplotlib.pyplot as plt
 
 class Perceptron(object):
 
-    def __init__(self, sizes, aprendizaje, momento, epocas):
-
+    def __init__(self, sizes, aprendizaje, momento):
+        
         self.sizes = sizes
         self.aprendizaje = aprendizaje
         self.momento = momento
         self.cant_capas = len(sizes) + 2
-        self.epocas = epocas
+        #self.epocas = epocas
     
     def init_params(self):
         w = []
@@ -19,6 +19,7 @@ class Perceptron(object):
         w1 = np.random.rand(self.sizes[0], 100)
         b1 = np.random.rand(1, self.sizes[0])[0]
 
+        
         if len(self.sizes) == 2:
 
             w2 = np.random.rand(self.sizes[1], self.sizes[0])
@@ -101,10 +102,13 @@ class Perceptron(object):
         return deltas
         
 
-    def gradiente_descendente(self, w, deltas, y, lr, m):
+    def gradiente_descendente(self, w, b, deltas, y, lr, m):
         #deltas 
         delta_w = [np.zeros(w.shape) for w in w]
         w_ant = w
+
+        #ACTUALIZACION PESOS
+
         for i in range(len(w)):
             for j in range(len(w[i])):
                 if i > 0:
@@ -118,8 +122,14 @@ class Perceptron(object):
 
                         delta_w[i][j][k] = y[i][k]*deltas[i][j]*lr
                         w[i][j][k] = w[i][j][k] - delta_w[i][j][k]
-                        w[i][j][k] += m*(w_ant[i][j][k] - w[i][j][k])                        
-        return w
+                        w[i][j][k] += m*(w_ant[i][j][k] - w[i][j][k]) 
+
+        #ACTUALIZACION BIAS
+        for i in range(len(b)):
+            for j in range(len(b[j])):
+                b[i][j]-=deltas[i][j]*lr        
+
+        return w, b
             
 
     def train(self, data_train):
@@ -135,11 +145,7 @@ class Perceptron(object):
         b = self.b
         err = []
   
-<<<<<<< HEAD
-        for e in range(1):
-=======
-        for e in range(self.epocas):
->>>>>>> gonza
+        for e in range(55):
             np.random.shuffle(letras_train)
             for i in range(len(letras_train)):
 
@@ -162,16 +168,14 @@ class Perceptron(object):
                 #BACKPROPAGATION le paso la salida esperada, las salidas de las capas y los pesos a partir de la segunda capa
                 deltas = self.backpropagation(ye, y[-1], w[1:])
 
-                for j in range(len(b)):
-                    for k in range(len(b[j])):
-                        b[j][k]-=deltas[j][k]*0.3
+                
 
                 #Backforward
                 #w_prueba = w.copy()
 
                 #Gradiente descendiete: Le paso los pesos, los deltas y las salidas de las capas
                 
-                w = self.gradiente_descendente(w, deltas, y[:3], self.aprendizaje, self.momento)
+                w, b = self.gradiente_descendente(w, b, deltas, y[:3], self.aprendizaje, self.momento)
                 
                         
                 
@@ -182,7 +186,39 @@ class Perceptron(object):
 
         self.w = w
         self.b = b
+    
+
+    def predecir(self, letra):
+        cant_capas = self.cant_capas #4
+        w = self.w
+        b = self.b
+        z = [letra]
+        y = [letra] 
+        for i in range(cant_capas-1):
+            #0 ,1, 2
+            yi = []
+            zi = []
+            for j in range(len(w[i])):
+                #Suma ponderada
+                entrada = np.dot(y[i],w[i][j])
+                #Funcion de activacion
+                if i == cant_capas - 2:
+                    salida = f.sigmoide(entrada+b[i][j])
+                else:
+                    salida = f.lineal(entrada+b[i][j])
+                zi.append(entrada)
+                yi.append(salida)
+            y.append(np.array(yi))
+            z.append(np.array(zi))
         
+        clase_salida = f.one_hot_encoding(y[-1])
+   
+        if clase_salida[0] == 1:
+            return "B"
+        elif clase_salida[1] == 1:
+            return "D"
+        else:
+            return "F"
         
         
     def test_train(self, test):
@@ -208,30 +244,18 @@ class Perceptron(object):
 
 
 
-<<<<<<< HEAD
+
 """ cantidad = "100"
-letras = get_letras(cantidad)
-=======
-cantidad = "100"
-letras = df.get_letras(cantidad)
->>>>>>> gonza
+letras = df.get_letras_distorsionadas(cantidad)
 data_train = letras[:int(len(letras)*0.8)]
 data_test = letras[int(len(letras)*0.8)+1:int(len(letras)*0.8)+int(len(letras)*0.15)]
 data_validation = letras[int(len(letras)*0.8)+int(len(letras)*0.15)+1:99]
 
-
-
-perceptron = Perceptron([5,5], 0.25, 0.3, 35)
+perceptron = Perceptron([5,5], 0.25, 0.2)
 w, b = perceptron.init_params()
-capas = perceptron.init_layers() """
+capas = perceptron.init_layers()
 
+perceptron.train(data_train)
 
-#perceptron.train(data_train)
-
-perceptron.test_train(data_test)
-
-
-
-
-
+perceptron.test_train(data_test) """
 

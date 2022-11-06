@@ -20,3 +20,11 @@ def derivate_error(ys,ye):
     return (ys-ye)
 
 
+def one_hot_encoding(salida):
+    clase = np.zeros_like(salida, dtype=int)
+    clase[np.argmax(salida)] = 1
+
+    return clase
+
+
+print([1,0,0]==[0,0,1])

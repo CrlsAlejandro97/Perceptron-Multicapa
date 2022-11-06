@@ -1,5 +1,7 @@
-from data_functions import generar_data_letras, distorsionar_letras, get_letras
+import data_functions as df
 from Perceptron import Perceptron
+from Distorsionador import Distorsionador
+from Interfaz import Interfaz 
 
 class Controller:
 
@@ -15,14 +17,14 @@ class Controller:
 
     def generar_data(self):
         cantidad = str(self.view.opcion_generar.get())
-        generar_data_letras(cantidad)
-        distorsionar_letras(cantidad)
+        df.generar_data_letras(cantidad)
+        df.generar_data_distorsionadas(cantidad)
         self.view.create_label("Dataset generado!", row=2, column=2, columnspan=10)
     
 
     def train(self):
         cantidad = str(self.view.opcion_entrenar.get())
-        letras = get_letras(cantidad)
+        letras = df.get_letras_distorsionadas(cantidad)
         data_train = letras[:int(len(letras)*0.8)]
         data_test = letras[int(len(letras)*0.8)+1:int(len(letras)*0.8)+int(len(letras)*0.15)]
         data_validation = letras[int(len(letras)*0.8)+int(len(letras)*0.15)+1:99]
@@ -31,12 +33,15 @@ class Controller:
     def create_perceptron(self):
         neuronas_capa_1 = int(self.view.entries["neuronas_capa_1"].get())
         neuronas_capa_2 = int(self.view.entries["neuronas_capa_2"].get())
-        tamaño = [neuronas_capa_1, neuronas_capa_2]
+        if neuronas_capa_1 == 0:
+            sizes = [neuronas_capa_2]
+        elif neuronas_capa_2 == 0:
+            sizes = [neuronas_capa_1]
+        else:
+            sizes = [neuronas_capa_1, neuronas_capa_2]
         aprendizaje = float(self.view.scales["aprendizaje"].get())
         momento = float(self.view.scales["momento"].get())
-        print(aprendizaje)
-        print(momento)
-        perceptron = Perceptron(tamaño, aprendizaje, momento)
+        perceptron = Perceptron(sizes, aprendizaje, momento)
         w, b = perceptron.init_params()
         capas = perceptron.init_layers()
         self.perceptron = perceptron
@@ -49,6 +54,18 @@ class Controller:
             letra="D"
         else:
             letra = "F"
+        
+        distorsion = float(self.view.scales["distorsion"].get())
+        distorsionador = Distorsionador(0, 0.3)
+        letra_codigo = df.generar_letra(letra)
+        letra_distorsionada = distorsionador._dist_letra(letra_codigo, distorsion)
+
+        letra_prediccion = self.perceptron.predecir(letra_distorsionada)
+        print(letra_prediccion)
+
+        interfaz = Interfaz("500x500", 500, 500)
+        interfaz.mostrar(letra_distorsionada, distorsion)
+
         
         
     

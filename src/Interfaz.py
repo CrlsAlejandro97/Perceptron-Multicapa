@@ -15,8 +15,6 @@ class Interfaz:
 
         frame.place(relx=0,rely=0)
 
-        # Transformo el arreglo de una letra a una matriz de 10x10
-        print(letra)
         letra_2d = np.reshape(letra, (10,10))
         list_btn = []
         for i in range(10):

@@ -20,20 +20,9 @@ def derivate_error(ys,ye):
     return (ys-ye)
 
 
-# def deltaHidden(W,deltaInput):
-#     #a no se usa porque f.activacion es lineal
-#     DELTA = []
-#     DELTA.append(deltaInput)
-#     for layer in reversed(W):
-#         wl = np.transpose(layer)
-#         delta=[]
-#         for i in range(len(wl)):
-#             delta.append(np.sum(wl[i]*deltaInput)*derivate_lineal())
-#         DELTA.append(delta)
-#         deltaInput =np.array(delta)
-    
-#     return DELTA
-    
+
+
+
 
 
 def calculateDelta(ye,ys3,W):
@@ -52,29 +41,6 @@ def calculateDelta(ye,ys3,W):
       i=i+1
     return deltas[::-1]
 
-def Gradientdescent(deltas,W,Want,activations,B,alfa,beta):
-    #Pesos anteriores
-    Wres = []
-    #Pesos actualizados
-    Wnext = []
-    #Calculo para nuevos pesos
-    for i in range(len(W)):
-        waux = []
-        new_weight = []
-        #Actualizacion de bias
-        B[i] = B[i] - alfa*deltas[i]
-        #Actualizacion de pesos
-        for j in range(len(W[i])):
-           #Resguardo peso actual
-           waux.append(W[i][j])
-           #Peso actualizado
-           new_weight.append(W[i][j] - alfa*deltas[i][j]*activations[i] + beta*(W[i][j] - Want[i][j]))
-        waux = np.array(waux)
-        new_weight = np.array(new_weight)
-        Wres.append(waux)
-        Wnext.append(new_weight)
-    
-    return Wres,Wnext,B
     
 
 
