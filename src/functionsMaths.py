@@ -57,6 +57,34 @@ def Gradientdescent_test(deltas,W,Want,activations,B,alfa,beta):
     
     return Wres,Wnext,B
 
+
+
+def gradiente_descendente_gonza(w,B, deltas, y, lr, m):
+    #deltas 
+    delta_w = [np.zeros(w.shape) for w in w]
+    w_ant = w
+    for i in range(len(w)):
+        for j in range(len(w[i])):
+            if i > 0:
+                for k in range(len(w[i-1])):
+
+                    delta_w[i][j][k] = y[i][k]*deltas[i][j]*lr
+                    w[i][j][k] = w[i][j][k] - delta_w[i][j][k]
+                    w[i][j][k] += m*(w_ant[i][j][k] - w[i][j][k])
+            else:
+                for k in range(100):
+
+                    delta_w[i][j][k] = y[i][k]*deltas[i][j]*lr
+                    w[i][j][k] = w[i][j][k] - delta_w[i][j][k]
+                    w[i][j][k] += m*(w_ant[i][j][k] - w[i][j][k])
+
+    for j in range(len(B)):
+        for k in range(len(B[j])):
+            B[j][k]-=deltas[j][k]*lr         
+                          
+        return w,B
+
+
 def feedforward(self, x, w, b, cant_capas):
         z = [x]
         y = [x] 
