@@ -9,7 +9,8 @@ class View:
         self.figure = None
         self.canvas = None
         self.opcion_generar = IntVar()
-        self.opcion_entrenar = IntVar()  
+        self.opcion_entrenar = IntVar()
+        self.opcion_letra = IntVar()  
         self.labels = {}
         self.entries = {}
         self.buttons = {}
@@ -17,7 +18,8 @@ class View:
         self.radios = {}
         self.frames = {}
         self.master.title("Perceptron")
-        self.master.geometry("1000x600")
+        self.master.geometry("1000x500")
+        self.master.resizable(width=0, height=0)
         self.createviewConfiguration()
         self.createviewPrediction()
         self.createviewGeneration()
@@ -28,10 +30,9 @@ class View:
     # adding elements of UI to window
 
     def createviewConfiguration(self):
-        frame1 = tk.Frame(self.master)
-        frame1.config(bg="lightblue") 
-        frame1.config(width=500,height=600)
-        frame1.grid(column=0, row=0)
+        frame1 = tk.Frame(self.master) 
+        frame1.config(width=500,height=600, borderwidth=1, relief="solid")
+        frame1.grid(column=0, row=0, rowspan=2)
         self.frame1 = frame1
 
     def createviewPrediction(self):
@@ -59,14 +60,7 @@ class View:
         self.frame5 = frame
 
     def createview(self):
-        
-
-        
-        """ 
-        
-         """
-        
-        
+            
 
         self.create_label("GENERACION DE DATASET", row=0, column=0, columnspan=3, master=self.frame4)
         self.create_radio("100", row=1, column=0, value=100, variable=self.opcion_generar, master=self.frame4)
@@ -74,32 +68,37 @@ class View:
         self.create_radio("1000", row=1, column=2, value=1000, variable=self.opcion_generar, master=self.frame4)
         self.create_button("Generar", row=1, column=3,varname="generate", master=self.frame4)
 
-        
 
         self.create_label("CONFIGURACION DEL PERCEPTRON", row=0, column=0, columnspan=3, master=self.frame3)
-        self.create_label("Neuronas por capa oculta (Separarlos por coma)", row=3, master=self.frame3)
-        self.create_label("Coeficiente de aprendizaje", row=4, master=self.frame3)
-        self.create_label("Momento", row=5, master=self.frame3)
-        self.create_entry(row=3,column=1, master=self.frame3, varname="tamaño")
+        self.create_label("Cantidad neuronas 1era capa oculta", row=3, master=self.frame3)
+        self.create_entry(row=3,column=1, master=self.frame3, varname="neuronas_capa_1")
+        self.create_label("Cantidad neuronas 2da capa oculta", row=4, master=self.frame3)
+        self.create_entry(row=4,column=1, master=self.frame3, varname="neuronas_capa_2")
+        self.create_label("Coeficiente de aprendizaje", row=5, master=self.frame3)
+        self.create_scale(row=5, column=1,varname="aprendizaje", from_=0, to=1, orient=HORIZONTAL,resolution=0.05, master=self.frame3)
+        self.create_label("Momento", row=6, master=self.frame3)
+        self.create_scale(row=6, column=1,varname="momento", from_=0, to=1, orient=HORIZONTAL,resolution=0.05, master=self.frame3)
+        
+        
+        self.create_button("Crear", row=7, column=0,columnspan=3,varname="create_perceptron", master=self.frame3)
 
 
         self.create_label("DATASET DE ENTRENAMIENTO", row=0, column=0,columnspan=3, master=self.frame5)
         self.create_radio("100", row=1, column=0, value=100, variable=self.opcion_entrenar, master=self.frame5)
         self.create_radio("500", row=1, column=1,value=500, variable=self.opcion_entrenar, master=self.frame5)
         self.create_radio("1000", row=1, column=2, value=1000, variable=self.opcion_entrenar, master=self.frame5)
-
-        """ 
-
-        self.create_button("Generar", row=1, column=2,varname="generate")
-        self.create_button("Crear", row=8, column=0,varname="create_perceptron")
-        self.create_button("Entrenar", row=11, column=2, columnspan=10, varname="train")
+        self.create_button("Entrenar", row=1, column=3, varname="train", master=self.frame5)
         
-        self.create_scale(row=6, column=1,varname="aprendizaje", from_=0, to=1, orient=HORIZONTAL,resolution=0.05)
-        self.create_scale(row=7, column=1,varname="momento", from_=0, to=1, orient=HORIZONTAL,resolution=0.05)
 
-        self.create_separator(3, 2)
-        self.create_separator(9, 2) """
+        self.create_label("PREDECIR LETRA", row=0, column=0, columnspan=3, master=self.frame2)
+        self.create_label("Elegir letra", row=1, column=0, columnspan=3, master=self.frame2)
+        self.create_radio("B", row=2, column=1, value=1, variable=self.opcion_letra, master=self.frame2)
+        self.create_radio("D", row=2, column=2,value=2, variable=self.opcion_letra, master=self.frame2)
+        self.create_radio("F", row=2, column=3, value=3, variable=self.opcion_letra, master=self.frame2)
+        self.create_label("Distorsion", row=3, column=0, columnspan=3, master=self.frame2)
+        self.create_scale(row=4, column=1, columnspan=2,varname="distorsion", from_=0, to=0.3, orient=HORIZONTAL,resolution=0.01, master=self.frame2)
 
+        self.create_button("PREDECIR", row=5, column=1, columnspan=3, varname="predecir", master=self.frame2)
 
     def create_label(self, text="", textvar=None, row=0, column=0, columnspan=1, pady=10, padx=20, varname="", master=None):
         if varname == "":
@@ -118,7 +117,7 @@ class View:
         self.buttons[varname].grid(row=row, column=column, columnspan=columnspan, pady=pady, padx=padx)
 
     def create_separator(self, row, columnspan, orient="horizontal", pady=10, padx=0, master=None):
-        ttk.Separator(self.master, orient=orient).grid(row=row, columnspan=columnspan, sticky="ew", pady=pady, padx=padx)
+        ttk.Separator(master=master, orient=orient).grid(row=row, columnspan=columnspan, sticky="ew", pady=pady, padx=padx)
 
     def create_scale(self, row=0, column=0, columnspan=1, varname="", from_=0, to=1, orient=HORIZONTAL, resolution=1, master=None):
         self.scales[varname] = Scale(master=master, from_=from_, to=to, orient=orient, resolution=resolution) 

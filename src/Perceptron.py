@@ -124,7 +124,7 @@ class Perceptron(object):
         b = self.b
         err = []
   
-        for e in range(1000):
+        for e in range(1):
             np.random.shuffle(letras_train)
             for i in range(len(letras_train)):
 
@@ -184,7 +184,7 @@ class Perceptron(object):
 
 
 
-cantidad = "100"
+""" cantidad = "100"
 letras = get_letras(cantidad)
 data_train = letras[:int(len(letras)*0.8)]
 data_test = letras[int(len(letras)*0.8)+1:int(len(letras)*0.8)+int(len(letras)*0.15)]
@@ -194,9 +194,9 @@ data_validation = letras[int(len(letras)*0.8)+int(len(letras)*0.15)+1:99]
 
 perceptron = Perceptron([5,5], 0.3, 0.2)
 w, b = perceptron.init_params()
-capas = perceptron.init_layers()
+capas = perceptron.init_layers() """
 
 
-perceptron.train(data_train)
+#perceptron.train(data_train)
 
 

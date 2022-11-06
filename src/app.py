@@ -8,7 +8,7 @@ class App:
         root = Tk()
         root.option_add('*Font', 'OpenSans')
         view = View(root)
-        #controller = Controller(view)
+        controller = Controller(view)
         root.mainloop()
 
 
