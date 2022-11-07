@@ -99,9 +99,9 @@ def feedforward(self, x, w, b, cant_capas):
                 entrada = np.dot(y[i],w[i][j])
                 #Funcion de activacion
                 if i == cant_capas - 2:
-                    salida = f.sigmoide(entrada+b[i][j])
+                    salida = sigmoide(entrada+b[i][j])
                 else:
-                    salida = f.lineal(entrada+b[i][j])
+                    salida = lineal(entrada+b[i][j])
                 zi.append(entrada)
                 yi.append(salida)
             y.append(np.array(yi))
@@ -114,4 +114,4 @@ def feedforward(self, x, w, b, cant_capas):
         return y[-1]
         
 def get_mse(error,n):
-    return error**2/(2*n)
+    return error/(2*n)
