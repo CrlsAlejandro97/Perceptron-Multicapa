@@ -1,7 +1,8 @@
 import data_functions as df
 from Perceptron import Perceptron
 from Distorsionador import Distorsionador
-from Interfaz import Interfaz 
+import numpy as np
+from tkinter import *
 
 class Controller:
 
@@ -41,7 +42,8 @@ class Controller:
             sizes = [neuronas_capa_1, neuronas_capa_2]
         aprendizaje = float(self.view.scales["aprendizaje"].get())
         momento = float(self.view.scales["momento"].get())
-        perceptron = Perceptron(sizes, aprendizaje, momento)
+        epocas = int(self.view.entries["epocas"].get())
+        perceptron = Perceptron(sizes, aprendizaje, momento, epocas)
         w, b = perceptron.init_params()
         capas = perceptron.init_layers()
         self.perceptron = perceptron
@@ -60,11 +62,35 @@ class Controller:
         letra_codigo = df.generar_letra(letra)
         letra_distorsionada = distorsionador._dist_letra(letra_codigo, distorsion)
 
-        letra_prediccion = self.perceptron.predecir(letra_distorsionada)
-        print(letra_prediccion)
+        letra_prediccion, porc_prediccion = self.perceptron.predecir(letra_distorsionada)
+        self.mostrarLetra(letra_distorsionada, letra_prediccion, porc_prediccion)
+        #texto_prediccion = f"Prediccion: Letra {letra_prediccion} con un acierto del {porc_prediccion}%"
+        #self.view.mostrarLetra(letra_distorsionada)
+        
+        
 
-        interfaz = Interfaz("500x500", 500, 500)
-        interfaz.mostrar(letra_distorsionada, distorsion)
+    
+    def mostrarLetra(self, letra_distorsionada, letra_prediccion, porc):
+        
+        if self.view.frames["letraMatriz"].winfo_exists() == 1:
+            self.view.frames["letraMatriz"].destroy()
+        
+        frame = self.view.createviewLetraMatriz()
+        texto_prediccion = f"Prediccion: Letra {letra_prediccion} con un acierto del {porc}%"
+        label_prediccion = Label(master=self.view.frames["letraMatriz"], text=texto_prediccion)
+        label_prediccion.place(x=30, y=325)
+
+        letra_2d = np.reshape(letra_distorsionada, (10,10))
+        list_btn = []
+        for i in range(10):
+            list_btn.append([])
+            for j in range(10):
+                list_btn[i].append(Button(frame))
+                list_btn[i][j].pack()
+                if (letra_2d[i][j] ==1 ):
+                    list_btn[i][j].config(bg="blue", borderwidth ="1", activebackground="orange", relief="solid")
+                list_btn[i][j].place(relx = 0.06 + 0.06*j, rely = 0.07 + 0.07*i, relwidth= 0.06, relheight=0.07) 
+        
 
         
         

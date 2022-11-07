@@ -5,13 +5,14 @@ import matplotlib.pyplot as plt
 
 class Perceptron(object):
 
-    def __init__(self, sizes, aprendizaje, momento):
+    def __init__(self, sizes, aprendizaje, momento, epocas):
+        #
         
         self.sizes = sizes
         self.aprendizaje = aprendizaje
         self.momento = momento
         self.cant_capas = len(sizes) + 2
-        #self.epocas = epocas
+        self.epocas = epocas
     
     def init_params(self):
         w = []
@@ -19,6 +20,7 @@ class Perceptron(object):
         w1 = np.random.rand(self.sizes[0], 100)
         b1 = np.random.rand(1, self.sizes[0])[0]
 
+        [5, 5]
         
         if len(self.sizes) == 2:
 
@@ -125,8 +127,9 @@ class Perceptron(object):
                         w[i][j][k] += m*(w_ant[i][j][k] - w[i][j][k]) 
 
         #ACTUALIZACION BIAS
+        #len(b) = 1
         for i in range(len(b)):
-            for j in range(len(b[j])):
+            for j in range(len(b[i])):
                 b[i][j]-=deltas[i][j]*lr        
 
         return w, b
@@ -145,7 +148,7 @@ class Perceptron(object):
         b = self.b
         err = []
   
-        for e in range(55):
+        for e in range(self.epocas):
             np.random.shuffle(letras_train)
             for i in range(len(letras_train)):
 
@@ -165,7 +168,7 @@ class Perceptron(object):
                 er = np.sum([er, (ye-y_obtenido)**2], axis=0)
                 #----------------------------------------------------#
 
-                #BACKPROPAGATION le paso la salida esperada, las salidas de las capas y los pesos a partir de la segunda capa
+                
                 deltas = self.backpropagation(ye, y[-1], w[1:])
 
                 
@@ -211,15 +214,24 @@ class Perceptron(object):
             y.append(np.array(yi))
             z.append(np.array(zi))
         
-        clase_salida = f.one_hot_encoding(y[-1])
-   
-        if clase_salida[0] == 1:
-            return "B"
-        elif clase_salida[1] == 1:
-            return "D"
-        else:
-            return "F"
         
+        clase_salida = f.one_hot_encoding(y[-1])
+        
+
+        #[1,0,0]
+        if clase_salida[0] == 1:
+            porc_prediccion = y[-1][0]*100
+            letra_prediccion = "B"
+            
+        elif clase_salida[1] == 1:
+            porc_prediccion = y[-1][1]*100
+            letra_prediccion = "D"
+    
+        else:
+            porc_prediccion = y[-1][2]*100
+            letra_prediccion = "F"
+            
+        return letra_prediccion, round(porc_prediccion, 2)
         
     def test_train(self, test):
         
@@ -250,6 +262,7 @@ letras = df.get_letras_distorsionadas(cantidad)
 data_train = letras[:int(len(letras)*0.8)]
 data_test = letras[int(len(letras)*0.8)+1:int(len(letras)*0.8)+int(len(letras)*0.15)]
 data_validation = letras[int(len(letras)*0.8)+int(len(letras)*0.15)+1:99]
+
 
 perceptron = Perceptron([5,5], 0.25, 0.2)
 w, b = perceptron.init_params()

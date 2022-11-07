@@ -22,9 +22,12 @@ def derivate_error(ys,ye):
 
 def one_hot_encoding(salida):
     clase = np.zeros_like(salida, dtype=int)
+    #[0, 0, 0]
+
+    #[0.87, 0.9, 0.7]
+    #[0, 1, 0]
     clase[np.argmax(salida)] = 1
 
     return clase
 
 
-print([1,0,0]==[0,0,1])
