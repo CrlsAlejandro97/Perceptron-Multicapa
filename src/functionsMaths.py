@@ -85,7 +85,7 @@ def gradiente_descendente_gonza(w,B, deltas, y, lr, m):
         return w,B
 
 
-def feedforward(self, x, w, b, cant_capas):
+def feedforward(x, w, b, cant_capas):
         z = [x]
         y = [x] 
         #cant_capas = 4
