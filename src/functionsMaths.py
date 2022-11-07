@@ -111,3 +111,12 @@ def feedforward(x, w, b):
 #Calculo de MSE        
 def get_mse(error,n):
     return error/(2*n)
+
+def div_tuplas(data):
+    letras = []
+    for letra in data:
+     x = letra[:100]
+     y = letra[100:]
+     letras.append((x, y))
+    
+    return letras
