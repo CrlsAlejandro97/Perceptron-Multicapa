@@ -85,17 +85,16 @@ def gradiente_descendente_gonza(w,B, deltas, y, lr, m):
         return w,B
 
 
-def feedforward(x, w, b, cant_capas):
+def feedforward(x, w, b):
+        cant_capas = 4 #4
         z = [x]
         y = [x] 
-        #cant_capas = 4
         for i in range(cant_capas-1):
+            #0 ,1, 2
             yi = []
             zi = []
             for j in range(len(w[i])):
                 #Suma ponderada
-                """ print("i: ", str(i), "j: ", str(j))
-                print("y[0]: " ,y[i]) """
                 entrada = np.dot(y[i],w[i][j])
                 #Funcion de activacion
                 if i == cant_capas - 2:
@@ -105,13 +104,10 @@ def feedforward(x, w, b, cant_capas):
                 zi.append(entrada)
                 yi.append(salida)
             y.append(np.array(yi))
-            print()
             z.append(np.array(zi))
-        
-        print(len(y))
-        
-        print("Capa salida de la funcion: ", y[-1])
-        return y[-1]
-        
+         
+        return y
+
+#Calculo de MSE        
 def get_mse(error,n):
     return error/(2*n)
