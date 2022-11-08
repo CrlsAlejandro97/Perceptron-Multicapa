@@ -133,3 +133,37 @@ def div_tuplas(data):
      letras.append((x, y))
     
     return letras
+
+
+def init_params_test(layers):
+        w = []
+        b = []
+        w1 = np.random.rand(layers[0], 100)
+        b1 = np.random.rand(1, layers[0])[0]
+
+        
+        if len(layers) == 2:
+
+            w2 = np.random.rand(layers[1], layers[0])
+            w3 = np.random.rand(3, layers[1])
+            b2 = np.random.rand(1, layers[1])[0]
+            b3 = np.random.rand(1, 3)[0]
+            w.append(w1)
+            w.append(w2)
+            w.append(w3)
+            b.append(b1)
+            b.append(b2)
+            b.append(b3)
+
+
+        elif len(layers) == 1:
+            w2 = np.random.rand(3, layers[0])
+            b2 = np.random.rand(1, 3)[0]
+            w.append(w1)
+            w.append(w2)
+            b.append(b1)
+            b.append(b2)
+
+        w = w
+        b = b
+        return w, b
