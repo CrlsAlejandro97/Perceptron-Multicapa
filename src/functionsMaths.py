@@ -98,8 +98,7 @@ def gradiente_descendente(w,B, deltas, y, lr, m):
         return w,B
 
 
-def feedforward(x, w, b):
-        cant_capas = 4 #4
+def feedforward(x, w, b,cant_capas): 
         z = [x]
         y = [x] 
         for i in range(cant_capas-1):
