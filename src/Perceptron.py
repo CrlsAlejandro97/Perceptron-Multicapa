@@ -1,11 +1,18 @@
 import numpy as np
 import functionsMaths as f
+import data_functions as df
+import matplotlib.pyplot as plt
 
 class Perceptron(object):
-    def __init__(self, sizes, aprendizaje, momento):
+
+    def __init__(self, sizes, aprendizaje, momento, epocas):
+        #
+        
         self.sizes = sizes
         self.aprendizaje = aprendizaje
         self.momento = momento
+        self.cant_capas = len(sizes) + 2
+        self.epocas = epocas
     
     def init_params(self):
         w = []
@@ -13,6 +20,8 @@ class Perceptron(object):
         w1 = np.random.rand(self.sizes[0], 100)
         b1 = np.random.rand(1, self.sizes[0])[0]
 
+        [5, 5]
+        
         if len(self.sizes) == 2:
 
             w2 = np.random.rand(self.sizes[1], self.sizes[0])
@@ -25,7 +34,8 @@ class Perceptron(object):
             b.append(b1)
             b.append(b2)
             b.append(b3)
-    
+
+
         elif len(self.sizes) == 1:
             w2 = np.random.rand(3, self.sizes[0])
             b2 = np.random.rand(1, 3)[0]
@@ -51,17 +61,16 @@ class Perceptron(object):
         self.capas = capas
         return capas
 
-    def feedforward(self, x, w, b, cant_capas):
+    def feedforward(self, x, w, b):
+        cant_capas = self.cant_capas #4
         z = [x]
         y = [x] 
-        #cant_capas = 4
         for i in range(cant_capas-1):
+            #0 ,1, 2
             yi = []
             zi = []
             for j in range(len(w[i])):
                 #Suma ponderada
-                """ print("i: ", str(i), "j: ", str(j))
-                print("y[0]: " ,y[i]) """
                 entrada = np.dot(y[i],w[i][j])
                 #Funcion de activacion
                 if i == cant_capas - 2:
@@ -71,18 +80,64 @@ class Perceptron(object):
                 zi.append(entrada)
                 yi.append(salida)
             y.append(np.array(yi))
-            print()
             z.append(np.array(zi))
-        
-        print(len(y))
-        
-        print("Capa salida de la funcion: ", y[-1])
-        return y[-1]
+         
+        return y
 
 
+    def backpropagation(self, ye, ys3, w):
+        #ye: salida espera
+        #ys3: salida obtenida
+        #W:  vector peso de las capas
+
+        #Delta de capa de salida
+        deltaOut = f.derivate_error(ys3,ye)*f.derivate_sigmoide(ys3)
+        deltas =[]
+        deltas.append(deltaOut)
+        i=0
+        for wi in reversed(w):
+            delta = np.dot(np.transpose(wi),deltas[i])*f.derivate_lineal()
+            deltas.append(delta)
+            i=i+1
+        
+        deltas = deltas[::-1]
+        return deltas
+        
+
+    def gradiente_descendente(self, w, b, deltas, y, lr, m):
+        #deltas 
+        delta_w = [np.zeros(w.shape) for w in w]
+        w_ant = w
+
+        #ACTUALIZACION PESOS
+
+        for i in range(len(w)):
+            for j in range(len(w[i])):
+                if i > 0:
+                    for k in range(len(w[i-1])):
+
+                        delta_w[i][j][k] = y[i][k]*deltas[i][j]*lr
+                        w[i][j][k] = w[i][j][k] - delta_w[i][j][k]
+                        w[i][j][k] += m*(w_ant[i][j][k] - w[i][j][k])
+                else:
+                    for k in range(100):
+
+                        delta_w[i][j][k] = y[i][k]*deltas[i][j]*lr
+                        w[i][j][k] = w[i][j][k] - delta_w[i][j][k]
+                        w[i][j][k] += m*(w_ant[i][j][k] - w[i][j][k]) 
+
+        #ACTUALIZACION BIAS
+        #len(b) = 1
+        for i in range(len(b)):
+            for j in range(len(b[i])):
+                b[i][j]-=deltas[i][j]*lr        
+
+        return w, b
+            
 
     def train(self, data_train):
         #Dividiendo data train en una tupla (entrada,clase)
+        er = np.array([0,0,0])
         letras_train = []
         for letra in data_train:
             x_train = letra[:100]
@@ -91,122 +146,129 @@ class Perceptron(object):
 
         w = self.w
         b = self.b
+        err = []
   
-        for e in range(1):
+        for e in range(self.epocas):
             np.random.shuffle(letras_train)
-            
-            """ 
-                for epoca 
+            for i in range(len(letras_train)):
 
-                feedforward(x_train , w, b) ==> retorna la salida de la ultima capa
-                backpropagation(y_train, salida_obtenida, w, b, capas) => retorna una lista de deltas para cada capa 
-                gradiente_descent(delta, aprendizaje, momento, w, b) => retorna los pesos actualizados
-
-                for i in range(len(w)):
-
-            """
-            for i in range(1):
-
-                # feedforward
-                cant_capas = len(self.sizes)+2
-                #Primer capa oculta
-                ys1 =[]
-                z1 = []
-                deltas = []
-                zs = []
-                activaciones = [letras_train[i][0]]
-                for j in range(len(w[0])):
-                    #Suma ponderada
-                    Z1 = np.dot(letras_train[i][0],w[0][j])
-                    #Funcion de activacion
-                    ys1.append(f.lineal(Z1+b[0][j]))
-                    z1.append(Z1)
                 
-                z1 = np.array(z1)
-                ys1 = np.array(ys1)
-
-                activaciones.append(ys1)
-                zs.append(z1)
-                #Segunda capa
-                ys2 = []
-                z2 = []
-                for j in range(len(w[1])):
-                    #Suma ponderada
-                    Z2 = np.dot(ys1,w[1][j])
-                    #Funcion de activacion
-                    ys2.append(f.lineal(Z2+b[1][j]))
-                    z2.append(Z2)
-                
-                z2 = np.array(z2)
-                ys2 = np.array(ys2)
-                
-                activaciones.append(ys2)
-                zs.append(z2)
-                #Capa de salida
-                ys3 = []
-                z3 = []
-                for j in range(len(w[2])):
-                    #Suma ponderada
-                    Z3 = np.dot(ys2,w[2][j])
-                    #Funcion de activacion
-                    ys3.append(f.sigmoide(Z3+b[2][j]))
-                    z3.append(Z3)
-                print("Capa salida: ", ys3)
-                self.feedforward(letras_train[i][0], w, b, cant_capas)
+                #Con feedforward obtengo la salida de todas las capas
+                y = self.feedforward(letras_train[i][0], w, b)
                 #!!-----Calculo del error-----!!!
+                
+                #La salida obtenida
+                y_obtenido = y[-1]
 
-                ys3 = np.array(ys3)
-                z3 = np.array(z3)
+                #La salida esperada
+                ye = np.array(letras_train[i][1])
 
-                activaciones.append(ys3)
-                zs.append(z3)
+                #La sumatoria de errores
 
-                Ye = np.array(letras_train[i][1])
+                er = np.sum([er, (ye-y_obtenido)**2], axis=0)
                 #----------------------------------------------------#
 
-                delta = f.cost_derivate(activaciones[3], Ye)*f.sigmoide_derivate(z3)
-                delta = np.array(delta)
-                b[2] -= delta*0.3 
+                
+                deltas = self.backpropagation(ye, y[-1], w[1:])
 
-                deltas.append(delta)
-                ##print(ys3, letras_train[i][1],delta)
-                #CAPA OCULTA N° 2
-                delta2 = np.dot(np.transpose(w[2]),deltas[0])*f.lineal_derivate()
-                b[1] -= delta2*0.3
-
-                deltas.append(delta2)
-
-                #CAPA OCULTA N° 1
-                delta1 = np.dot(np.transpose(w[1]),deltas[1])*f.lineal_derivate()
-                b[0] -= delta1*0.3
-
-                deltas.append(delta1)
+                
 
                 #Backforward
-                for j in range(len(w[2])):
-                    for k in range(len(w[1])):
-                        w[2][j][k] -= activaciones[2][k]*deltas[0][j]*0.3
+                #w_prueba = w.copy()
+
+                #Gradiente descendiete: Le paso los pesos, los deltas y las salidas de las capas
                 
-                for j in range(len(w[1])):
-                    for k in range(len(w[0])):
-                        w[1][j][k] -= activaciones[1][k]*deltas[1][j]*0.3
+                w, b = self.gradiente_descendente(w, b, deltas, y[:3], self.aprendizaje, self.momento)
+                
+                        
+                
 
-                for j in range(len(w[0])):
-                    for k in range(100):
-                        w[0][j][k] -= activaciones[0][k]*deltas[2][j]*0.3 
+            er = er/(2*len(letras_train))
+            err.append(np.mean(er))
+        self.err = err
 
-    def _divX_Y(letras):
-        for letra in letras:
-            x_train = letra[:100]
-            y_train = letra[100:]
-        return x_train,y_train
-
+        self.w = w
+        self.b = b
     
 
+    def predecir(self, letra):
+        cant_capas = self.cant_capas #4
+        w = self.w
+        b = self.b
+        z = [letra]
+        y = [letra] 
+        for i in range(cant_capas-1):
+            #0 ,1, 2
+            yi = []
+            zi = []
+            for j in range(len(w[i])):
+                #Suma ponderada
+                entrada = np.dot(y[i],w[i][j])
+                #Funcion de activacion
+                if i == cant_capas - 2:
+                    salida = f.sigmoide(entrada+b[i][j])
+                else:
+                    salida = f.lineal(entrada+b[i][j])
+                zi.append(entrada)
+                yi.append(salida)
+            y.append(np.array(yi))
+            z.append(np.array(zi))
+        
+        
+        clase_salida = f.one_hot_encoding(y[-1])
+        
 
-w3 = np.random.rand(3, 5)
-delta = np.array([0.3, 0.05, 0.17])
+        #[1,0,0]
+        if clase_salida[0] == 1:
+            porc_prediccion = y[-1][0]*100
+            letra_prediccion = "B"
+            
+        elif clase_salida[1] == 1:
+            porc_prediccion = y[-1][1]*100
+            letra_prediccion = "D"
+    
+        else:
+            porc_prediccion = y[-1][2]*100
+            letra_prediccion = "F"
+            
+        return letra_prediccion, round(porc_prediccion, 2)
+        
+    def test_train(self, test):
+        
+        letras_test = []
+        for letra in test:
+            x_train = letra[:100]
+            y_train = letra[100:]
+            letras_test.append((x_train, y_train))
 
-""" print(w3)
-print(np.transpose(w3)) """
-print(np.dot(np.transpose(w3),delta)*f.lineal_derivate())
+        letra = ["b","d","f"]
+        porcentaje = 0
+        for i in range(len(test)):
+            y = self.feedforward(letras_test[i][0], self.w, self.b)
+            salida = np.zeros_like(y[-1])
+            salida = y[-1]
+            if(np.argmax(salida) == np.argmax(letras_test[i][1])):
+                porcentaje += 1
+                print("Prediccion: {} letra: {} ---- valor real: {}, letra: {}".format( np.argmax(salida)+1,letra[ np.argmax(salida)],np.argmax(letras_test[i][1])+1,letra[np.argmax(letras_test[i][1])] ))
+        print("Porcentaje predicho: {}%".format((porcentaje/len(test))*100))    
+
+
+
+
+
+
+""" cantidad = "100"
+letras = df.get_letras_distorsionadas(cantidad)
+data_train = letras[:int(len(letras)*0.8)]
+data_test = letras[int(len(letras)*0.8)+1:int(len(letras)*0.8)+int(len(letras)*0.15)]
+data_validation = letras[int(len(letras)*0.8)+int(len(letras)*0.15)+1:99]
+
+
+perceptron = Perceptron([5,5], 0.25, 0.2)
+w, b = perceptron.init_params()
+capas = perceptron.init_layers()
+
+perceptron.train(data_train)
+
+perceptron.test_train(data_test) """
+

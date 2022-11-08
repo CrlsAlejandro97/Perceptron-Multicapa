@@ -8,14 +8,27 @@ def lineal(x):
     return 0.1*x
 
 #Derivadas
-def sigmoide_derivate(x):
-    return sigmoide(x)*(1.0 - sigmoide(x))
+def derivate_sigmoide(x):
+    return x*(1-x)
 
-def lineal_derivate():
+def derivate_lineal():
     return 0.1
 
-def cost_derivate(activation,y):
-    return (activation - y)
+def derivate_error(ys,ye):
+    #ye es el valor esperado
+    #ys es el valor calculado por la funcion de activacion
+    return (ys-ye)
+
+
+def one_hot_encoding(salida):
+    clase = np.zeros_like(salida, dtype=int)
+    #[0, 0, 0]
+
+    #[0.87, 0.9, 0.7]
+    #[0, 1, 0]
+    clase[np.argmax(salida)] = 1
+
+    return clase
 
 def calculateDelta(ye,ys3,W):
     #ye: salida espera

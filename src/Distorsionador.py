@@ -15,7 +15,7 @@ class Distorsionador:
     def distorsionar(self, letras):
         # El 10% de las letras tienen que mantenerse originales
         cant_sin_dist = int(0.1 * len(letras))
-        distorsiones = []
+        letras_dist = letras.copy()
         for i in range(len(letras)):
             #Arranco a distorsionar el dataset desde la posicion igual al 10% de la cantidad de letras que hay en el ds
             if i > int(cant_sin_dist):
@@ -23,17 +23,15 @@ class Distorsionador:
                 letra = letras[i]
                 distorsion = self._calcDistorsion()
                 
-                letras[i] = self._dist_letra(letra, distorsion)
+                letras_dist[i] = self._dist_letra(letra, distorsion)
             else:
                 distorsion = 0
-            
-            distorsiones.append(distorsion)
-
-
-        return distorsiones
+        
+        
+        return letras_dist
 
     def _dist_letra(self, letra, distorsion):
-
+        
         # Recorro el arreglo de la letra y si hay un uno hay una probabilidad de un x porciento de que se cambie de lugar dependiendo de la distorsion calculada
         posiciones_uno = []
         posiciones_cero = []
