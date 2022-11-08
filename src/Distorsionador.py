@@ -29,6 +29,8 @@ class Distorsionador:
         
         
         return letras_dist
+    
+
 
     def _dist_letra(self, letra, distorsion):
         

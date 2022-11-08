@@ -14,7 +14,7 @@ def derivate_sigmoide(x):
 def derivate_lineal():
     return 0.1
 
-def derivate_cost(ys,ye):
+def derivate_error(ys,ye):
     #ye es el valor esperado
     #ys es el valor calculado por la funcion de activacion
     return (ys-ye)
@@ -36,7 +36,7 @@ def calculateDelta(ys,ye,W):
     #W:  vector peso de las capas
 
     #Delta de capa de salida
-    deltaOut = derivate_cost(ys,ye)*derivate_sigmoide(ys)
+    deltaOut = derivate_error(ys,ye)*derivate_sigmoide(ys)
     deltas =[]
     deltas.append(deltaOut)
     i=0
