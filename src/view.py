@@ -26,36 +26,37 @@ class View:
     # adding elements of UI to window
 
     def createviewConfiguration(self):
-        frame = customtkinter.CTkFrame(self.master) 
+        frame = customtkinter.CTkFrame(self.master, corner_radius=0) 
         frame.config(width=500,height=700)
         frame.grid_propagate(False)
+        frame.rowconfigure((0,1,2), weight=1)
         frame.grid(column=0, row=0, rowspan=2)
         self.frames["configuration"] = frame
 
     def createviewLetra(self):
-        frame = customtkinter.CTkFrame(self.master)
+        frame = customtkinter.CTkFrame(self.master, corner_radius=0)
         frame.config(width=500,height=700)
         frame.grid_propagate(False)
         frame.grid(column=1, row=0)
         self.frames["letra"] = frame
         
     def createviewGeneration(self):
-        frame = customtkinter.CTkFrame(self.frames["configuration"])
+        frame = customtkinter.CTkFrame(self.frames["configuration"], corner_radius=0)
         frame.configure(width=500,height=100)
         frame.columnconfigure((0, 1, 2, 3), weight=1)
         frame.grid_propagate(False)
-        frame.grid(column=0, row=0)
+        frame.grid(column=0, row=0, pady=0)
         self.frames["generation"] = frame
 
     def createviewConfigPerceptron(self):
-        frame = customtkinter.CTkFrame(self.frames["configuration"]) 
+        frame = customtkinter.CTkFrame(self.frames["configuration"], corner_radius=0) 
         frame.config(width=500,height=340)
         frame.grid_propagate(False)
-        frame.grid(column=0, row=1)
+        frame.grid(column=0, row=1, pady=0)
         self.frames["configPerceptron"] = frame
 
     def createviewTrain(self):
-        frame = customtkinter.CTkFrame(self.frames["configuration"])
+        frame = customtkinter.CTkFrame(self.frames["configuration"], corner_radius=0)
         frame.config(width=500,height=300)
         frame.grid_propagate(False)
         frame.columnconfigure((0, 1, 2, 3), weight=1)
@@ -64,7 +65,7 @@ class View:
 
         
     def createviewPrediction(self):
-        frame = customtkinter.CTkFrame(self.frames["letra"])
+        frame = customtkinter.CTkFrame(self.frames["letra"], corner_radius=0)
         frame.config(width=500,height=200)
         frame.columnconfigure((0, 1, 2, 3, 4), weight=1)
         frame.grid(column=0, row=0)
@@ -72,7 +73,7 @@ class View:
         self.frames["prediction"] = frame
     
     def createviewMatriz(self):
-        frame = customtkinter.CTkFrame(self.frames["letra"])
+        frame = customtkinter.CTkFrame(self.frames["letra"], corner_radius=0)
         frame.config(width=500,height=500)
         frame.grid(column=0, row=1)
         frame.grid_propagate(False)
@@ -80,7 +81,7 @@ class View:
         return self.frames["matriz"]
     
     def createviewLetraMatriz(self):
-        frame = customtkinter.CTkFrame(self.frames["matriz"])
+        frame = customtkinter.CTkFrame(self.frames["matriz"], corner_radius=0)
         frame.config(width=500,height=400)
         frame.grid_propagate(False)
         frame.grid(column=0, row=0)

@@ -9,6 +9,7 @@ class App:
         customtkinter.set_appearance_mode("Dark")  # Modes: system (default), light, dark
         customtkinter.set_default_color_theme("blue")  # Themes: blue (default), dark-blue, green
         root = customtkinter.CTk()
+        root.resizable(False, False)
         view = View(root)
         controller = Controller(view)
         root.mainloop()
