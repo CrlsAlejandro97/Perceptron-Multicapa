@@ -6,11 +6,11 @@ import csv
 from Distorsionador import Distorsionador
 
 def get_letras_distorsionadas(cant):
-    letras = (pd.read_csv(os.path.join(os.path.abspath(''),"src","data","distorsionadas",cant,'letras.csv'),sep=';',header=None)).to_numpy()
+    letras = (pd.read_csv(os.path.join(os.path.abspath(''), "data","distorsionadas",cant,'letras.csv'),sep=';',header=None)).to_numpy()
     return letras
 
 def get_letras_originales(cant):
-    letras = (pd.read_csv(os.path.join(os.path.abspath(''),"src","data","originales",cant,'letras.csv'),sep=';',header=None)).to_numpy()
+    letras = (pd.read_csv(os.path.join(os.path.abspath(''), "data","originales",cant,'letras.csv'),sep=';',header=None)).to_numpy()
     return letras
     
 
@@ -23,7 +23,7 @@ def generar_data_distorsionadas(cant):
     
     letras_dist = distorsionador.distorsionar(letras)
     dataframe_dist_data = pd.DataFrame(letras_dist)
-    dataframe_dist_data.to_csv(os.path.join(os.path.abspath(''),"src","data","distorsionadas", str(cant) ,'letras.csv'), sep=";", index=None, header=None)
+    dataframe_dist_data.to_csv(os.path.join(os.path.abspath(''), "data","distorsionadas", str(cant) ,'letras.csv'), sep=";", index=None, header=None)
 
 def generar_letra(letra):
 
@@ -94,7 +94,7 @@ def generar_data_letras(cant):
     #Mezclo el dataset para mas aleatoriedad
     shuffle(letras_format_csv)
     
-    file = open(os.path.join(os.path.abspath(''),"src","data","originales", str(cant) ,'letras.csv'), 'w+', newline ='')
+    file = open(os.path.join(os.path.abspath(''), "data","originales", str(cant) ,'letras.csv'), 'w+', newline ='')
     with file:   
         write = csv.writer(file, delimiter=';')
         write.writerows(letras_format_csv)
