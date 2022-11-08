@@ -2,6 +2,7 @@ from tkinter import *
 import tkinter as tk
 from tkinter import ttk
 import numpy as np
+import customtkinter
 
 class View:
 
@@ -16,58 +17,62 @@ class View:
         self.scales = {}
         self.radios = {}
         self.frames = {}
+        self.text_font = "default_theme"
         self.master.title("Perceptron")
         self.master.geometry("1000x700")
-        style = ttk.Style()
-        style.configure('TButton', font= ('Arial', 10, 'underline'),
-        foreground='Green')
         
         self.createview()
 
     # adding elements of UI to window
 
     def createviewConfiguration(self):
-        frame = tk.Frame(self.master) 
+        frame = customtkinter.CTkFrame(self.master) 
         frame.config(width=500,height=700)
         frame.grid_propagate(False)
         frame.grid(column=0, row=0, rowspan=2)
         self.frames["configuration"] = frame
 
     def createviewLetra(self):
-        frame = tk.Frame(self.master)
-        frame.config(width=500,height=700, padx=20)
+        frame = customtkinter.CTkFrame(self.master)
+        frame.config(width=500,height=700)
         frame.grid_propagate(False)
         frame.grid(column=1, row=0)
         self.frames["letra"] = frame
         
     def createviewGeneration(self):
-        frame = tk.Frame(self.frames["configuration"])
-        frame.config(width=500,height=150)
+        frame = customtkinter.CTkFrame(self.frames["configuration"])
+        frame.configure(width=500,height=100)
+        frame.columnconfigure((0, 1, 2, 3), weight=1)
+        frame.grid_propagate(False)
         frame.grid(column=0, row=0)
         self.frames["generation"] = frame
 
     def createviewConfigPerceptron(self):
-        frame = tk.Frame(self.frames["configuration"]) 
-        frame.config(width=500,height=300)
+        frame = customtkinter.CTkFrame(self.frames["configuration"]) 
+        frame.config(width=500,height=340)
+        frame.grid_propagate(False)
         frame.grid(column=0, row=1)
         self.frames["configPerceptron"] = frame
 
     def createviewTrain(self):
-        frame = tk.Frame(self.frames["configuration"])
+        frame = customtkinter.CTkFrame(self.frames["configuration"])
         frame.config(width=500,height=300)
+        frame.grid_propagate(False)
+        frame.columnconfigure((0, 1, 2, 3), weight=1)
         frame.grid(column=0, row=2)
         self.frames["train"] = frame
 
         
     def createviewPrediction(self):
-        frame = tk.Frame(self.frames["letra"])
+        frame = customtkinter.CTkFrame(self.frames["letra"])
         frame.config(width=500,height=200)
+        frame.columnconfigure((0, 1, 2, 3, 4), weight=1)
         frame.grid(column=0, row=0)
         frame.grid_propagate(False)
         self.frames["prediction"] = frame
     
     def createviewMatriz(self):
-        frame = tk.Frame(self.frames["letra"])
+        frame = customtkinter.CTkFrame(self.frames["letra"])
         frame.config(width=500,height=500)
         frame.grid(column=0, row=1)
         frame.grid_propagate(False)
@@ -75,7 +80,7 @@ class View:
         return self.frames["matriz"]
     
     def createviewLetraMatriz(self):
-        frame = tk.Frame(self.frames["matriz"])
+        frame = customtkinter.CTkFrame(self.frames["matriz"])
         frame.config(width=500,height=400)
         frame.grid_propagate(False)
         frame.grid(column=0, row=0)
@@ -130,23 +135,23 @@ class View:
         self.create_scale(row=2, column=3,varname="distorsion",from_=0, to=0.3, orient=HORIZONTAL,resolution=0.01, master=self.frames["prediction"])
 
         
-        self.create_button("PREDECIR", row=2, column=4, columnspan=3, varname="predecir", master=self.frames["prediction"])
+        self.create_button("Predecir", row=2, column=4, varname="predecir", master=self.frames["prediction"])
 
 
     def create_label(self, text="", textvar=None, row=0, column=0, columnspan=1, pady=10, padx=20, varname="", master=None):
         if varname == "":
             varname = text
-        self.labels[varname] = Label(master=master, text=text, textvariable=textvar)
+        self.labels[varname] = customtkinter.CTkLabel(master=master, text=text, textvariable=textvar)
         self.labels[varname].grid(row=row, column=column, columnspan=columnspan, pady=pady, padx=padx)
 
     def create_entry(self, row, column, varname, columnspan=1, pady=10, padx=20,master=None):
-        self.entries[varname] = Entry(master=master)
+        self.entries[varname] = customtkinter.CTkEntry(master=master)
         self.entries[varname].grid(row=row, column=column, columnspan=columnspan, pady=pady, padx=padx)
 
     def create_button(self, text, row=0, column=0, columnspan=1, varname="", state=NORMAL, pady=10, padx=5, master=None):
         if varname == "":
             varname = text
-        self.buttons[varname] = Button(master=master, text=text, state=state, pady=5)
+        self.buttons[varname] = customtkinter.CTkButton(master=master, text=text, state=state)
         self.buttons[varname].grid(row=row, column=column, columnspan=columnspan, pady=pady, padx=padx)
 
     def create_separator(self, row, columnspan, orient="horizontal", pady=10, padx=0, master=None):
@@ -157,12 +162,12 @@ class View:
         self.scales[varname].grid(row=row, column=column, columnspan=columnspan) 
     
     def create_radio(self, text, row, column, columnspan=1, value=None, variable=None, master=None):
-        radio_button = Radiobutton(master=master, text=text, value=value, variable=variable)
+        radio_button = customtkinter.CTkRadioButton(master=master, text=text, value=value, variable=variable)
         radio_button.grid(row=row, column=column, columnspan=columnspan)
 
 
     def set_command(self, varname, command):
-        self.buttons[varname]["command"] = command
+        self.buttons[varname].configure(command=command)
 
     def set_button_normal(self, varname):
         self.get_button(varname)["state"] = NORMAL

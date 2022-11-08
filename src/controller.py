@@ -3,6 +3,7 @@ from Perceptron import Perceptron
 from Distorsionador import Distorsionador
 import numpy as np
 from tkinter import *
+import customtkinter
 
 class Controller:
 
@@ -46,6 +47,7 @@ class Controller:
         perceptron = Perceptron(sizes, aprendizaje, momento, epocas)
         w, b = perceptron.init_params()
         capas = perceptron.init_layers()
+        print(momento)
         self.perceptron = perceptron
 
     def predecir_letra(self):
@@ -77,7 +79,7 @@ class Controller:
         
         frame = self.view.createviewLetraMatriz()
         texto_prediccion = f"Prediccion: Letra {letra_prediccion} con un acierto del {porc}%"
-        label_prediccion = Label(master=self.view.frames["letraMatriz"], text=texto_prediccion)
+        label_prediccion = customtkinter.CTkLabel(master=self.view.frames["letraMatriz"], text=texto_prediccion)
         label_prediccion.place(x=30, y=325)
 
         letra_2d = np.reshape(letra_distorsionada, (10,10))
@@ -85,10 +87,10 @@ class Controller:
         for i in range(10):
             list_btn.append([])
             for j in range(10):
-                list_btn[i].append(Button(frame))
+                list_btn[i].append(customtkinter.CTkButton(frame, relief="solid", corner_radius=0, hover=False, text="", border_width =1, border_color="#FFFFFF"))
                 list_btn[i][j].pack()
                 if (letra_2d[i][j] ==1 ):
-                    list_btn[i][j].config(bg="blue", borderwidth ="1", activebackground="orange", relief="solid")
+                    list_btn[i][j].configure(bg="blue", fg_color="black")
                 list_btn[i][j].place(relx = 0.06 + 0.06*j, rely = 0.07 + 0.07*i, relwidth= 0.06, relheight=0.07) 
         
 
