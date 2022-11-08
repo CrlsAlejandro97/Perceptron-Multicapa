@@ -1,5 +1,8 @@
-from data_functions import generar_data_letras, distorsionar_letras, get_letras
+import data_functions as df
 from Perceptron import Perceptron
+from Distorsionador import Distorsionador
+import numpy as np
+from tkinter import *
 
 class Controller:
 
@@ -10,79 +13,85 @@ class Controller:
         view.set_command("generate", self.generar_data)
         view.set_command("create_perceptron", self.create_perceptron)
         view.set_command("train", self.train)
+        view.set_command("predecir", self.predecir_letra)
 
 
     def generar_data(self):
         cantidad = str(self.view.opcion_generar.get())
-        print(cantidad)
-        generar_data_letras(cantidad)
-        distorsionar_letras(cantidad)
+        df.generar_data_letras(cantidad)
+        df.generar_data_distorsionadas(cantidad)
         self.view.create_label("Dataset generado!", row=2, column=2, columnspan=10)
     
 
     def train(self):
         cantidad = str(self.view.opcion_entrenar.get())
-        letras = get_letras(cantidad)
+        letras = df.get_letras_distorsionadas(cantidad)
         data_train = letras[:int(len(letras)*0.8)]
         data_test = letras[int(len(letras)*0.8)+1:int(len(letras)*0.8)+int(len(letras)*0.15)]
         data_validation = letras[int(len(letras)*0.8)+int(len(letras)*0.15)+1:99]
-        print(self.perceptron.w[0][0][0])
         self.perceptron.train(data_train)
-        print(self.perceptron.w[0][0][0])
-            
-
+        
     def create_perceptron(self):
-        tamaño = self.view.entries["tamaño"].get()
-        tamaño = tamaño.split(",")
-        for t in range(len(tamaño)):
-            tamaño[t] = int(tamaño[t])
+        neuronas_capa_1 = int(self.view.entries["neuronas_capa_1"].get())
+        neuronas_capa_2 = int(self.view.entries["neuronas_capa_2"].get())
+        if neuronas_capa_1 == 0:
+            sizes = [neuronas_capa_2]
+        elif neuronas_capa_2 == 0:
+            sizes = [neuronas_capa_1]
+        else:
+            sizes = [neuronas_capa_1, neuronas_capa_2]
         aprendizaje = float(self.view.scales["aprendizaje"].get())
         momento = float(self.view.scales["momento"].get())
-        print(aprendizaje)
-        print(momento)
-        perceptron = Perceptron(tamaño, aprendizaje, momento)
+        epocas = int(self.view.entries["epocas"].get())
+        perceptron = Perceptron(sizes, aprendizaje, momento, epocas)
         w, b = perceptron.init_params()
         capas = perceptron.init_layers()
         self.perceptron = perceptron
 
-    # reading csv files
-    """ def read(self):
-        try:
-            path = self.view.entries["trainpath"].get()
-            with open(path) as f:
-                reader = csv.reader(f, delimiter=';')
-                self.model.set_trainset(list(reader))
+    def predecir_letra(self):
+        opcion_letra = self.view.opcion_letra.get()
+        if opcion_letra == 1:
+            letra="B"
+        elif opcion_letra == 2:
+            letra="D"
+        else:
+            letra = "F"
+        
+        distorsion = float(self.view.scales["distorsion"].get())
+        distorsionador = Distorsionador(0, 0.3)
+        letra_codigo = df.generar_letra(letra)
+        letra_distorsionada = distorsionador._dist_letra(letra_codigo, distorsion)
 
-                # Conversion of number type columns to float
-                for train in self.model.trainset:
-                    self.model.add_class(train[-1])
-                    for i in range(len(train) - 1):
-                        train[i] = float(train[i])
+        letra_prediccion, porc_prediccion = self.perceptron.predecir(letra_distorsionada)
+        self.mostrarLetra(letra_distorsionada, letra_prediccion, porc_prediccion)
+        #texto_prediccion = f"Prediccion: Letra {letra_prediccion} con un acierto del {porc_prediccion}%"
+        #self.view.mostrarLetra(letra_distorsionada)
+        
+        
 
-                # Set colors based on class name
-                self.model.set_train_colors([encode(row[-1]) for row in self.model.trainset])
-                
-            path = self.view.entries["testpath"].get()
-            with open(path) as f:
-                reader = csv.reader(f, delimiter=';')
-                self.model.set_testset(list(reader))
+    
+    def mostrarLetra(self, letra_distorsionada, letra_prediccion, porc):
+        
+        if self.view.frames["letraMatriz"].winfo_exists() == 1:
+            self.view.frames["letraMatriz"].destroy()
+        
+        frame = self.view.createviewLetraMatriz()
+        texto_prediccion = f"Prediccion: Letra {letra_prediccion} con un acierto del {porc}%"
+        label_prediccion = Label(master=self.view.frames["letraMatriz"], text=texto_prediccion)
+        label_prediccion.place(x=30, y=325)
 
-                # Conversion of number type columns to float
-                for test in self.model.testset:
-                    self.model.get_category_by_name(test[-1]).increase_size()
-                    for i in range(len(test) - 1):
-                        test[i] = float(test[i])
+        letra_2d = np.reshape(letra_distorsionada, (10,10))
+        list_btn = []
+        for i in range(10):
+            list_btn.append([])
+            for j in range(10):
+                list_btn[i].append(Button(frame))
+                list_btn[i][j].pack()
+                if (letra_2d[i][j] ==1 ):
+                    list_btn[i][j].config(bg="blue", borderwidth ="1", activebackground="orange", relief="solid")
+                list_btn[i][j].place(relx = 0.06 + 0.06*j, rely = 0.07 + 0.07*i, relwidth= 0.06, relheight=0.07) 
+        
 
-                # Set colors based on class name
-                self.model.set_test_colors([encode(row[-1]) for row in self.model.testset])
-
-            # Set dimensions of data in model 
-            self.model.set_dimensions()
-            # UI feedback
-            self.view.get_entry("trainpath").config({"background": "pale green"})
-            self.view.get_entry("testpath").config({"background": "pale green"})
-            self.view.set_button_normal("train")
-        except FileNotFoundError:
-            # UI feedback
-            self.view.get_entry("trainpath").config({"background": "tomato"})
-            self.view.get_entry("testpath").config({"background": "tomato"}) """
+        
+        
+    

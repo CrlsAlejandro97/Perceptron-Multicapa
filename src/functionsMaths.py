@@ -8,27 +8,40 @@ def lineal(x):
     return 0.1*x
 
 #Derivadas
-def sigmoide_derivate(x):
-    return sigmoide(x)*(1.0 - sigmoide(x))
+def derivate_sigmoide(x):
+    return x*(1-x)
 
-def lineal_derivate():
+def derivate_lineal():
     return 0.1
 
-def cost_derivate(activation,y):
-    return (activation - y)
+def derivate_cost(ys,ye):
+    #ye es el valor esperado
+    #ys es el valor calculado por la funcion de activacion
+    return (ys-ye)
 
-def calculateDelta(ye,ys3,W):
+
+def one_hot_encoding(salida):
+    clase = np.zeros_like(salida, dtype=int)
+    #[0, 0, 0]
+
+    #[0.87, 0.9, 0.7]
+    #[0, 1, 0]
+    clase[np.argmax(salida)] = 1
+
+    return clase
+
+def calculateDelta(ys,ye,W):
     #ye: salida espera
     #ys3: salida obtenida
     #W:  vector peso de las capas
 
     #Delta de capa de salida
-    deltaOut = cost_derivate(ys3,ye)*sigmoide_derivate(ys3)
+    deltaOut = derivate_cost(ys,ye)*derivate_sigmoide(ys)
     deltas =[]
     deltas.append(deltaOut)
     i=0
     for w in reversed(W):
-      delta = np.dot(np.transpose(w),deltas[i])*lineal_derivate()
+      delta = np.dot(np.transpose(w),deltas[i])*derivate_lineal()
       deltas.append(delta)
       i=i+1
     return deltas[::-1]
@@ -59,7 +72,7 @@ def Gradientdescent_test(deltas,W,Want,activations,B,alfa,beta):
 
 
 
-def gradiente_descendente_gonza(w,B, deltas, y, lr, m):
+def gradiente_descendente(w,B, deltas, y, lr, m):
     #deltas 
     delta_w = [np.zeros(w.shape) for w in w]
     w_ant = w
