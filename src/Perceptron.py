@@ -215,23 +215,18 @@ class Perceptron(object):
             z.append(np.array(zi))
         
         
-        clase_salida = f.one_hot_encoding(y[-1])
-        
+        letras_predicciones = {}
 
-        #[1,0,0]
-        if clase_salida[0] == 1:
-            porc_prediccion = y[-1][0]*100
-            letra_prediccion = "B"
-            
-        elif clase_salida[1] == 1:
-            porc_prediccion = y[-1][1]*100
-            letra_prediccion = "D"
-    
-        else:
-            porc_prediccion = y[-1][2]*100
-            letra_prediccion = "F"
-            
-        return letra_prediccion, round(porc_prediccion, 2)
+        
+        letras_predicciones["B"] = round(y[-1][0]*100,2)
+        letras_predicciones["D"] = round(y[-1][1]*100,2)
+        letras_predicciones["F"] = round(y[-1][2]*100,2)
+                
+        sorted_letras = dict(sorted(letras_predicciones.items(), key=lambda item:item[1], 
+        reverse=True))
+        
+        #clase_salida = f.one_hot_encoding(y[-1])
+        return sorted_letras
         
     def test_train(self, test):
         

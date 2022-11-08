@@ -1,26 +1,19 @@
-from distutils.core import setup
-import py2exe
+import sys
+from cx_Freeze import setup, Executable
 
-import sys; sys.argv.append('py2exe')
+# Dependencies are automatically detected, but it might need fine tuning.
+#"packages": ["os", ""] is used as example only
+build_exe_options = {"packages": ["os", "customtkinter"], "include_files":["data"]}
 
-py2exe_options = dict(
-                      ascii=True,  # Exclude encodings
-                      excludes=['_ssl',  # Exclude _ssl
-                                'pyreadline', 'difflib', 'doctest', 'locale', 
-                                'optparse'],  # Exclude standard library
-                      dll_excludes=['msvcr71.dll'],  # Exclude msvcr71
-                      compressed=True,  # Compress library.zip
-                      )
+# base="Win32GUI" should be used only for Windows GUI app
+base = None
+if sys.platform == "win32":
+    base = "Win32GUI"
 
-setup(name='<Name>',
-      version='1.0',
-      description='<Description>',
-      author='Ofer Schwarz',
-
-      windows=[
-        {
-            "script": "app.py"
-        }
-    ],
-      options={'py2exe': py2exe_options},
-      )
+setup(
+    name="MLP",
+    version="0.1",
+    description="MLP group 6",
+    options={"build_exe": build_exe_options},
+    executables=[Executable("app.py", base=base)],
+)
