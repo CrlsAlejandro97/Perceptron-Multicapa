@@ -5,6 +5,8 @@ import numpy as np
 from tkinter import messagebox as MessageBox
 from tkinter import *
 import customtkinter
+from matplotlib.figure import Figure 
+from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg,  NavigationToolbar2Tk) 
 
 class Controller:
 
@@ -77,7 +79,6 @@ class Controller:
             self.mostrarLetra(letra_distorsionada, letras_predicciones)
         except:
             MessageBox.showerror("", "Elegir una letra para predecir")
-        
         
 
     

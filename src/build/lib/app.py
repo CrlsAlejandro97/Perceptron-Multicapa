@@ -11,6 +11,7 @@ class App:
         root = customtkinter.CTk()
         root.resizable(False, False)
         view = View(root)
+        Tk.iconbitmap(root, default="assets/logoa.ico")
         controller = Controller(view)
         root.mainloop()
 
