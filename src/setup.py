@@ -29,3 +29,4 @@ setup(
     options={"build_exe": build_exe_options},
     executables=[Executable("app.py", base=base, icon="assets/logoa.ico", shortcut_name="MLP", shortcut_dir="DesktopFolder")],
 )
+

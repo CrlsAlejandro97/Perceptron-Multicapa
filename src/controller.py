@@ -12,7 +12,6 @@ class Controller:
 
     def __init__(self, view):
         self.view = view
-
         view.set_command("create_perceptron", self.create_perceptron)
         view.set_command("train", self.train)
         view.set_command("predecir", self.predecir_letra)
@@ -55,9 +54,44 @@ class Controller:
             MessageBox.showerror("", "Rellenar todos los campos")
         
         
+    def plot(self): 
+
+        newWindow = Toplevel(self.view.master) 
+            
+        newWindow.title("Grafica de error") 
+    
+        newWindow.geometry("500x500") 
         
+        Label(newWindow,  
+            text ="This is a new window").pack()
+  
+        perceptron = self.perceptron
+        epocas = self.perceptron.epocas
+        percentage_error_training = 0
+        percentage_error_validation = 0
+
+        fig = Figure(figsize = (5, 5), 
+                    dpi = 100) 
         
+        y = [i**2 for i in range(101)] 
+            
+        plot1 = fig.add_subplot(111) 
+    
+        plot1.plot(y) 
         
+        canvas = FigureCanvasTkAgg(fig, 
+                                master = newWindow)   
+        canvas.draw() 
+    
+        canvas.get_tk_widget().pack() 
+        
+        toolbar = NavigationToolbar2Tk(canvas, 
+                                    newWindow) 
+
+        toolbar.update() 
+        
+        canvas.get_tk_widget().pack() 
+
 
 
     def predecir_letra(self):
@@ -77,6 +111,8 @@ class Controller:
 
             letras_predicciones = self.perceptron.predecir(letra_distorsionada)
             self.mostrarLetra(letra_distorsionada, letras_predicciones)
+            self.view.create_button("Ver grafica de error", row=4, column=0, varname="show_grafica",master=self.view.frames["letrasPrediction"])
+            self.view.set_command("show_grafica", self.plot)
         except:
             MessageBox.showerror("", "Elegir una letra para predecir")
         
