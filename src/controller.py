@@ -77,36 +77,10 @@ class Controller:
 
             letras_predicciones = self.perceptron.predecir(letra_distorsionada)
             self.mostrarLetra(letra_distorsionada, letras_predicciones)
-            self.view.create_button("Ver Grafica", row=4, column=0, varname="grafica_error", master=self.view.frames["letrasPrediction"])
         except:
             MessageBox.showerror("", "Elegir una letra para predecir")
         
-    
-    """ def mostrarGrafica(self):
-  
-        fig = Figure(figsize = (5, 5), 
-                    dpi = 100) 
-    
-        y = [i**2 for i in range(101)] 
-    
-        plot1 = fig.add_subplot(111) 
-    
-        plot1.plot(y) 
-     
-        canvas = FigureCanvasTkAgg(fig, 
-                                master = window)   
-        canvas.draw() 
-    
-        
-        canvas.get_tk_widget().pack() 
-    
-        
-        toolbar = NavigationToolbar2Tk(canvas, 
-                                    window) 
-        toolbar.update() 
-    
-        
-        canvas.get_tk_widget().pack()  """
+
     
     def mostrarLetra(self, letra_distorsionada, letras_predicciones):
         
