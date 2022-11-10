@@ -6,6 +6,7 @@ from tkinter import messagebox as MessageBox
 from tkinter import *
 import customtkinter
 from matplotlib.figure import Figure 
+from matplotlib import pyplot as plt
 from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg,  NavigationToolbar2Tk) 
 
 class Controller:
@@ -57,27 +58,26 @@ class Controller:
     def plot(self): 
 
         newWindow = Toplevel(self.view.master) 
-            
         newWindow.title("Grafica de error") 
-    
-        newWindow.geometry("500x500") 
+        newWindow.geometry("600x600") 
         
-        Label(newWindow,  
-            text ="This is a new window").pack()
-  
         perceptron = self.perceptron
         epocas = self.perceptron.epocas
-        percentage_error_training = 0
-        percentage_error_validation = 0
+        errores = self.perceptron.err
+        cant_epocas = []
+        for i in range(epocas):
+            cant_epocas.append(i)
 
-        fig = Figure(figsize = (5, 5), 
+        fig = Figure(figsize = (6, 6), 
                     dpi = 100) 
-        
-        y = [i**2 for i in range(101)] 
-            
-        plot1 = fig.add_subplot(111) 
+
     
-        plot1.plot(y) 
+        plot1 = fig.add_subplot(111) 
+
+        plot1.set_title("Error de salida por Epoca")
+        
+        default_x_ticks = range(1, len(cant_epocas)+1)
+        plot1.plot(default_x_ticks, errores)
         
         canvas = FigureCanvasTkAgg(fig, 
                                 master = newWindow)   
@@ -92,9 +92,13 @@ class Controller:
         
         canvas.get_tk_widget().pack() 
 
+        plot1.set_xlabel( 'EPOCAS' )
+        plot1.set_ylabel( 'ERROR (%)' )
+
 
 
     def predecir_letra(self):
+        
         try:
             opcion_letra = self.view.opcion_letra.get()
             if opcion_letra == 1:
@@ -114,14 +118,13 @@ class Controller:
             self.view.create_button("Ver grafica de error", row=4, column=0, varname="show_grafica",master=self.view.frames["letrasPrediction"])
             self.view.set_command("show_grafica", self.plot)
         except:
-            MessageBox.showerror("", "Elegir una letra para predecir")
+            MessageBox.showerror("", "Elegir una letra a predecir")
         
 
     
     def mostrarLetra(self, letra_distorsionada, letras_predicciones):
         
         if self.view.frames["letraMatriz"].winfo_exists() == 1:
-            print("Se destruyo el tablero")
             self.view.frames["letraMatriz"].destroy()
         
         frameLetraMatriz = self.view.createviewLetraMatriz()

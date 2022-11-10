@@ -184,7 +184,12 @@ class Perceptron(object):
                 
 
             er = er/(2*len(letras_train))
+            
             err.append(np.mean(er))
+
+        for i in range(len(er)):
+            er[i] = round(er[i]*100, 2)
+
         self.err = err
 
         self.w = w
