@@ -6,7 +6,6 @@ import matplotlib.pyplot as plt
 class Perceptron(object):
 
     def __init__(self, sizes, aprendizaje, momento, epocas):
-        #
         
         self.sizes = sizes
         self.aprendizaje = aprendizaje
@@ -136,6 +135,7 @@ class Perceptron(object):
             
 
     def train(self, data_train):
+
         #Dividiendo data train en una tupla (entrada,clase)
         er = np.array([0,0,0])
         letras_train = []
@@ -146,7 +146,7 @@ class Perceptron(object):
 
         w = self.w
         b = self.b
-        err = []
+        error_train = []
   
         for e in range(self.epocas):
             np.random.shuffle(letras_train)
@@ -180,17 +180,14 @@ class Perceptron(object):
                 
                 w, b = self.gradiente_descendente(w, b, deltas, y[:3], self.aprendizaje, self.momento)
                 
-                        
-                
-
             er = er/(2*len(letras_train))
             
-            err.append(np.mean(er))
+            error_train.append(np.mean(er))
 
         for i in range(len(er)):
             er[i] = round(er[i]*100, 2)
 
-        self.err = err
+        self.error_train = error_train
 
         self.w = w
         self.b = b

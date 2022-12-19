@@ -15,23 +15,52 @@ class Controller:
         self.view = view
         view.set_command("create_perceptron", self.create_perceptron)
         view.set_command("train", self.train)
+        view.set_command("visualizar", self.visualizar_letra)
         view.set_command("predecir", self.predecir_letra)
 
-    def train(self):
-        
+
+    def visualizar_letra(self):
         try:
-            cantidad = str(self.view.opcion_entrenar.get())
-            df.generar_data_letras(cantidad)
-            df.generar_data_distorsionadas(cantidad)
-            letras = df.get_letras_distorsionadas(cantidad)
-            data_train = letras[:int(len(letras)*0.8)]
-            data_test = letras[int(len(letras)*0.8)+1:int(len(letras)*0.8)+int(len(letras)*0.15)]
-            data_validation = letras[int(len(letras)*0.8)+int(len(letras)*0.15)+1:99]
-            self.perceptron.train(data_train)
-            MessageBox.showinfo("", "MLP ENTRENADO")
+            opcion_letra = self.view.opcion_letra.get()
+            if opcion_letra == 1:
+                letra="B"
+            elif opcion_letra == 2:
+                letra="D"
+            elif opcion_letra==3:
+                letra = "F"
+            
+            distorsion = float(self.view.scales["distorsion"].get())
+            distorsionador = Distorsionador(0, 0.3)
+            letra_codigo = df.generar_letra(letra)
+            letra_distorsionada = distorsionador._dist_letra(letra_codigo, distorsion)
+            self.letra_distorsionada = letra_distorsionada
+            self.mostrarLetra(letra_distorsionada)
         except:
-            MessageBox.showerror("", "Elegir un dataset para entrenar")
+            MessageBox.showerror("", "Elegir una letra a visualizar")
+
+    def train(self):
+
+        try:
+            perceptron = self.perceptron
         
+            try:
+                cantidad = str(self.view.opcion_entrenar.get())
+                df.generar_data_letras(cantidad)
+                df.generar_data_distorsionadas(cantidad)
+                letras = df.get_letras_distorsionadas(cantidad)
+                data_train = letras[:int(len(letras)*0.8)]
+                data_test = letras[int(len(letras)*0.8)+1:int(len(letras)*0.8)+int(len(letras)*0.15)]
+                data_validation = letras[int(len(letras)*0.8)+int(len(letras)*0.15)+1:99]
+                perceptron.train(data_train)
+                MessageBox.showinfo("", "MLP ENTRENADO")
+                self.view.create_button("Ver grafica de error", row=1, column=2, varname="show_grafica",master=self.view.frames["train"])
+                self.view.set_command("show_grafica", self.plot)
+
+            except:
+                MessageBox.showerror("", "Elegir un dataset para entrenar")
+
+        except:
+            MessageBox.showerror("", "No se ha creado un modelo")
 
     def create_perceptron(self):
         try:
@@ -63,7 +92,7 @@ class Controller:
         
         perceptron = self.perceptron
         epocas = self.perceptron.epocas
-        errores = self.perceptron.err
+        errores = self.perceptron.error_train
         cant_epocas = []
         for i in range(epocas):
             cant_epocas.append(i)
@@ -100,47 +129,37 @@ class Controller:
     def predecir_letra(self):
         
         try:
-            opcion_letra = self.view.opcion_letra.get()
-            if opcion_letra == 1:
-                letra="B"
-            elif opcion_letra == 2:
-                letra="D"
-            elif opcion_letra==3:
-                letra = "F"
-            
-            distorsion = float(self.view.scales["distorsion"].get())
-            distorsionador = Distorsionador(0, 0.3)
-            letra_codigo = df.generar_letra(letra)
-            letra_distorsionada = distorsionador._dist_letra(letra_codigo, distorsion)
+            perceptron = self.perceptron
+            try:
+                letra_distorsionada = self.letra_distorsionada
+                letras_predicciones = self.perceptron.predecir(letra_distorsionada)
 
-            letras_predicciones = self.perceptron.predecir(letra_distorsionada)
-            self.mostrarLetra(letra_distorsionada, letras_predicciones)
-            self.view.create_button("Ver grafica de error", row=4, column=0, varname="show_grafica",master=self.view.frames["letrasPrediction"])
-            self.view.set_command("show_grafica", self.plot)
+                for i, letra in enumerate(letras_predicciones.keys()):
+                    if i == 0:
+                        texto_prediccion = f"Letra predecida: {letra} con un acierto del {letras_predicciones[letra]}%"
+                        label_prediccion = customtkinter.CTkLabel(master=self.view.frames["letrasPrediction"], text=texto_prediccion, text_font='Helvetica 16 bold', fg_color="blue")
+                    else:
+                        texto_prediccion = f"Letra: {letra} con un acierto del {letras_predicciones[letra]}%"
+                        label_prediccion = customtkinter.CTkLabel(master=self.view.frames["letrasPrediction"], text=texto_prediccion)
+                    label_prediccion.place(relx=0, rely=0.25 + 0.15*i) 
+            except:
+                MessageBox.showerror("", "No se ha elegido una letra para predecir")
         except:
-            MessageBox.showerror("", "Elegir una letra a predecir")
+                MessageBox.showerror("", "No se ha creado un perceptron")
+
+        
+           
+        
         
 
     
-    def mostrarLetra(self, letra_distorsionada, letras_predicciones):
+    def mostrarLetra(self, letra_distorsionada):
         
         if self.view.frames["letraMatriz"].winfo_exists() == 1:
             self.view.frames["letraMatriz"].destroy()
         
         frameLetraMatriz = self.view.createviewLetraMatriz()
-        frameLetraPredictions = self.view.createviewLetrasPrediction()
-        self.view.create_label("PREDICCIONES", row=0, column=0, columnspan=3, master=self.view.frames["letrasPrediction"])
-        for i, letra in enumerate(letras_predicciones.keys()):
-            if i == 0:
-                texto_prediccion = f"Letra predecida: {letra} con un acierto del {letras_predicciones[letra]}%"
-                label_prediccion = customtkinter.CTkLabel(master=self.view.frames["letrasPrediction"], text=texto_prediccion, text_font='Helvetica 16 bold', fg_color="blue")
-            else:
-                texto_prediccion = f"Letra: {letra} con un acierto del {letras_predicciones[letra]}%"
-                label_prediccion = customtkinter.CTkLabel(master=self.view.frames["letrasPrediction"], text=texto_prediccion)
-            label_prediccion.grid(row=i+1, column=0)
         
-
-
         letra_2d = np.reshape(letra_distorsionada, (10,10))
         list_btn = []
         for i in range(10):
@@ -150,7 +169,16 @@ class Controller:
                 list_btn[i][j].pack()
                 if (letra_2d[i][j] ==1 ):
                     list_btn[i][j].configure(bg="blue", fg_color="black")
-                list_btn[i][j].place(relx = 0.06 + 0.06*j, rely = 0.07 + 0.07*i, relwidth= 0.06, relheight=0.07) 
+                list_btn[i][j].place(relx = 0.18 + 0.06*j, rely = 0.04 + 0.07*i, relwidth= 0.06, relheight=0.07)
+
+        
+        
+        
+       
+        
+
+
+        
         
 
         

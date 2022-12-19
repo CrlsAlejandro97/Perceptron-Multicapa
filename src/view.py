@@ -1,8 +1,8 @@
 from tkinter import *
 import tkinter as tk
 from tkinter import ttk
-import numpy as np
 import customtkinter
+from tktooltip import ToolTip
 
 class View:
 
@@ -10,6 +10,7 @@ class View:
         self.master = master
         self.opcion_generar = IntVar()
         self.opcion_entrenar = IntVar()
+        self.opcion_entrenar.set("100")
         self.opcion_letra = IntVar()  
         self.labels = {}
         self.entries = {}
@@ -95,7 +96,6 @@ class View:
 
         self.createviewConfiguration()
         self.createviewLetra()
-        #self.createviewGeneration()
         self.createviewConfigPerceptron()
         self.createviewTrain()
         self.createviewPrediction()
@@ -119,25 +119,39 @@ class View:
 
 
         self.create_label("DATASET DE ENTRENAMIENTO", row=0, column=0,columnspan=3, master=self.frames["train"])
-        self.create_radio("100", row=1, column=0, value=100, variable=self.opcion_entrenar, master=self.frames["train"])
-        self.create_radio("500", row=1, column=1,value=500, variable=self.opcion_entrenar, master=self.frames["train"])
-        self.create_radio("1000", row=1, column=2, value=1000, variable=self.opcion_entrenar, master=self.frames["train"])
-        self.create_button("Entrenar", row=1, column=3, varname="train", master=self.frames["train"])
+        self.create_button("Entrenar", row=1, column=1, varname="train", master=self.frames["train"])
         
 
         self.create_label("PREDECIR LETRA", row=0, column=0, columnspan=3, master=self.frames["prediction"])
         self.create_label("Elegir letra", row=1, column=0, columnspan=3, master=self.frames["prediction"])
+
+        self.buttons["dataset"] = customtkinter.CTkOptionMenu(self.frames["train"], values=["100", "500", "1000"], variable=self.opcion_entrenar)                                                 
+        self.buttons["dataset"].grid(row=1, column=0)
+
+
         self.create_radio("B", row=2, column=0, value=1, variable=self.opcion_letra, master=self.frames["prediction"])
         self.create_radio("D", row=2, column=1,value=2, variable=self.opcion_letra, master=self.frames["prediction"])
         self.create_radio("F", row=2, column=2, value=3, variable=self.opcion_letra, master=self.frames["prediction"])
         self.create_label("Distorsion", row=1, column=3, master=self.frames["prediction"])
         self.create_scale(row=2, column=3,varname="distorsion",from_=0, to=0.3, orient=HORIZONTAL,resolution=0.01, master=self.frames["prediction"])
         
-        self.create_button("Predecir", row=2, column=4, varname="predecir", master=self.frames["prediction"])
+        self.create_button("Visualizar", row=2, column=4, varname="visualizar", master=self.frames["prediction"])
 
         self.create_label("VISUALIZACION DE LETRA", row=0, column=0, columnspan=3, master=self.frames["matriz"])
 
-        self.create_label("PREDICCIONES", row=0, column=0, columnspan=3, master=self.frames["letrasPrediction"])
+    
+        self.buttons["predecir"] = customtkinter.CTkButton(master=self.frames["letrasPrediction"], text="Predecir", state=NORMAL)
+        self.buttons["predecir"].place(relx = 0.35, rely = 0.04)
+
+
+        #TOOLTIPS
+
+        ToolTip(self.buttons["create_perceptron"], msg="Crea un modelo de perceptron con la configuracion dada", follow=True, parent_kwargs={"bg": "black"}, fg="#ffffff", bg="#1c1c1c", padx=10, pady=10)
+        ToolTip(self.buttons["train"], msg="Entrena al modelo segun una determinada cantidad de letras",
+        parent_kwargs={"bg": "black"}, fg="#ffffff", bg="#1c1c1c", padx=10, pady=10)
+        ToolTip(self.buttons["visualizar"], msg="Muestra en el tablero la letra con su respectiva distorsion",
+        parent_kwargs={"bg": "black"}, fg="#ffffff", bg="#1c1c1c", padx=10, pady=10)
+        ToolTip(self.buttons["predecir"], msg="Predice, con el modelo entrenado, el porcentaje de acierto para cada letra (b, d y f)", parent_kwargs={"bg": "black"}, fg="#ffffff", bg="#1c1c1c", padx=10, pady=10)
 
     def create_label(self, text="", textvar=None, row=0, column=0, columnspan=1, pady=10, padx=20, varname="", master=None):
         if varname == "":
@@ -161,8 +175,7 @@ class View:
     def create_scale(self, row=0, column=0, columnspan=1, varname="", from_=0, to=1, orient=HORIZONTAL, resolution=1, master=None):
         self.scales[varname] = tk.Scale(master=master, from_=from_, to=to, orient=orient, resolution=resolution, background = "#353638", activebackground="#353638", bd=0, troughcolor="#2b6593", fg="white", length=120, relief=GROOVE, highlightthickness=0) 
         self.scales[varname].grid(row=row, column=column, columnspan=columnspan) 
-        #self.scales[varname].configure(style="TScale")
-    
+        
     def create_radio(self, text, row, column, columnspan=1, value=None, variable=None, master=None):
         radio_button = customtkinter.CTkRadioButton(master=master, text=text, value=value, variable=variable)
         radio_button.grid(row=row, column=column, columnspan=columnspan)
@@ -181,7 +194,7 @@ class View:
             for j in range(10):
                 list_btn[i].append(customtkinter.CTkButton(self.frames["letraMatriz"], relief="solid", corner_radius=0, hover=False, text="", border_width =1, border_color="#FFFFFF"))
                 list_btn[i][j].pack()
-                list_btn[i][j].place(relx = 0.06 + 0.06*j, rely = 0.07 + 0.07*i, relwidth= 0.06, relheight=0.07) 
+                list_btn[i][j].place(relx = 0.18 + 0.06*j, rely = 0.04 + 0.07*i, relwidth= 0.06, relheight=0.07) 
 
 
     
