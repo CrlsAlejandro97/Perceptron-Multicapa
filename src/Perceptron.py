@@ -106,7 +106,7 @@ class Perceptron(object):
     def gradiente_descendente(self, w, b, deltas, y, lr, m):
         #deltas 
         delta_w = [np.zeros(w.shape) for w in w]
-        w_ant = w
+        w_ant = w.copy()
 
         #ACTUALIZACION PESOS
 
@@ -134,19 +134,28 @@ class Perceptron(object):
         return w, b
             
 
-    def train(self, data_train):
+    def train(self, data_train, data_validation):
 
         #Dividiendo data train en una tupla (entrada,clase)
-        er = np.array([0,0,0])
         letras_train = []
+        letras_validation = []
         for letra in data_train:
             x_train = letra[:100]
             y_train = letra[100:]
             letras_train.append((x_train, y_train))
+        
+        for letra in data_validation:
+            x_validation = letra[:100]
+            y_validation = letra[100:]
+            letras_validation.append((x_validation, y_validation))
 
+        
         w = self.w
         b = self.b
-        error_train = []
+        error_train = np.array([0,0,0])
+        error_validation = np.array([0,0,0])
+        errores_train = []
+        errores_validation = []
   
         for e in range(self.epocas):
             np.random.shuffle(letras_train)
@@ -165,33 +174,44 @@ class Perceptron(object):
 
                 #La sumatoria de errores
 
-                er = np.sum([er, (ye-y_obtenido)**2], axis=0)
+                error_train = np.sum([error_train, (ye-y_obtenido)**2], axis=0)
                 #----------------------------------------------------#
 
                 
                 deltas = self.backpropagation(ye, y[-1], w[1:])
 
-                
-
-                #Backforward
-                #w_prueba = w.copy()
-
                 #Gradiente descendiete: Le paso los pesos, los deltas y las salidas de las capas
                 
                 w, b = self.gradiente_descendente(w, b, deltas, y[:3], self.aprendizaje, self.momento)
-                
-            er = er/(2*len(letras_train))
+
+
+
+            error_train = error_train/(2*len(letras_train))
+            errores_train.append(np.mean(error_train))
+
+            #VALIDATION
+            np.random.shuffle(letras_validation)
+            for i in range(len(letras_validation)):
+                y = self.feedforward(letras_validation[i][0],w,b)
+                y_obtenido = y[-1]
+                ye = np.array(letras_validation[i][1])
+                error_validation = np.sum([error_validation, (ye-y_obtenido)**2], axis=0)
+
+            error_validation = error_validation/(2*len(letras_validation))
+            errores_validation.append(np.mean(error_validation))
             
-            error_train.append(np.mean(er))
 
-        for i in range(len(er)):
-            er[i] = round(er[i]*100, 2)
+        """ for i in range(len(er)):
+            er[i] = round(er[i]*100, 2) """
 
-        self.error_train = error_train
 
         self.w = w
         self.b = b
+
+        return errores_train, errores_validation
     
+    def _calc_errores(self):
+        pass
 
     def predecir(self, letra):
         cant_capas = self.cant_capas #4
@@ -230,24 +250,43 @@ class Perceptron(object):
         #clase_salida = f.one_hot_encoding(y[-1])
         return sorted_letras
         
-    def test_train(self, test):
+    def test_train(self, data_test):
         
         letras_test = []
-        for letra in test:
-            x_train = letra[:100]
-            y_train = letra[100:]
-            letras_test.append((x_train, y_train))
+        for letra in data_test:
+            x_test = letra[:100]
+            y_test = letra[100:]
+            letras_test.append((x_test, y_test))
 
-        letra = ["b","d","f"]
-        porcentaje = 0
-        for i in range(len(test)):
+        c_letras = {
+        'B': np.array([1, 0, 0]),
+        'D': np.array([0, 1, 0]),
+        'F': np.array([0, 0, 1])
+        }   
+        predicciones_total = predicciones_b = predicciones_f = predicciones_d = 0
+        cant_b = cant_d = cant_f = 0
+        for i in range(len(letras_test)):
             y = self.feedforward(letras_test[i][0], self.w, self.b)
             salida = np.zeros_like(y[-1])
             salida = y[-1]
             if(np.argmax(salida) == np.argmax(letras_test[i][1])):
-                porcentaje += 1
-                print("Prediccion: {} letra: {} ---- valor real: {}, letra: {}".format( np.argmax(salida)+1,letra[ np.argmax(salida)],np.argmax(letras_test[i][1])+1,letra[np.argmax(letras_test[i][1])] ))
-        print("Porcentaje predicho: {}%".format((porcentaje/len(test))*100))    
+                predicciones_total += 1
+                if np.argmax(salida) == np.argmax(c_letras["B"]):
+                    predicciones_b+=1
+                elif np.argmax(salida) == np.argmax(c_letras["D"]):
+                    predicciones_d+=1
+                else:
+                    predicciones_f+=1
+            
+            if (letras_test[i][1] == c_letras["B"]).all():
+                cant_b+=1
+            if (letras_test[i][1] == c_letras["D"]).all():
+                cant_d+=1
+            if (letras_test[i][1] == c_letras["F"]).all():
+                cant_f+=1
+            
+        return predicciones_total, predicciones_b, predicciones_d, predicciones_f, cant_b, cant_d, cant_f
+         
 
 
 

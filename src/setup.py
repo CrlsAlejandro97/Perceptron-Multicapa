@@ -3,14 +3,12 @@ from cx_Freeze import setup, Executable
 
 # Dependencies are automatically detected, but it might need fine tuning.
 #"packages": ["os", ""] is used as example only
-build_exe_options = {"packages": ["os", "customtkinter", "tktooltip"], "include_files":["data", "assets"]}
+build_exe_options = {"packages": ["os", "customtkinter"], "include_files":["data", "assets"]}
 
 # base="Win32GUI" should be used only for Windows GUI app
 base = None
 if sys.platform == "win32":
     base = "Win32GUI"
-
-
 
 company_name = 'Grupo6'
 product_name = 'MLP'

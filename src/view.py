@@ -1,8 +1,7 @@
 from tkinter import *
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, font
 import customtkinter
-from tktooltip import ToolTip
 
 class View:
 
@@ -18,10 +17,11 @@ class View:
         self.scales = {}
         self.radios = {}
         self.frames = {}
-        self.text_font = "default_theme"
         self.master.title("Perceptron")
         self.master.geometry("1000x600")
-        
+        self.defaultFont = font.nametofont("TkDefaultFont")
+        self.defaultFont.configure(family="Helvetica",
+                                   size=12)
         self.createview()
         self.style = ttk.Style()
         self.style.configure("TScale", background="#505050")
@@ -144,14 +144,14 @@ class View:
         self.buttons["predecir"].place(relx = 0.35, rely = 0.04)
 
 
-        #TOOLTIPS
+        """ #TOOLTIPS
 
         ToolTip(self.buttons["create_perceptron"], msg="Crea un modelo de perceptron con la configuracion dada", follow=True, parent_kwargs={"bg": "black"}, fg="#ffffff", bg="#1c1c1c", padx=10, pady=10)
         ToolTip(self.buttons["train"], msg="Entrena al modelo segun una determinada cantidad de letras",
         parent_kwargs={"bg": "black"}, fg="#ffffff", bg="#1c1c1c", padx=10, pady=10)
         ToolTip(self.buttons["visualizar"], msg="Muestra en el tablero la letra con su respectiva distorsion",
         parent_kwargs={"bg": "black"}, fg="#ffffff", bg="#1c1c1c", padx=10, pady=10)
-        ToolTip(self.buttons["predecir"], msg="Predice, con el modelo entrenado, el porcentaje de acierto para cada letra (b, d y f)", parent_kwargs={"bg": "black"}, fg="#ffffff", bg="#1c1c1c", padx=10, pady=10)
+        ToolTip(self.buttons["predecir"], msg="Predice la letra cargada", parent_kwargs={"bg": "black"}, fg="#ffffff", bg="#1c1c1c", padx=10, pady=10) """
 
     def create_label(self, text="", textvar=None, row=0, column=0, columnspan=1, pady=10, padx=20, varname="", master=None):
         if varname == "":
